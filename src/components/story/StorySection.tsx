@@ -89,7 +89,7 @@ const StorySection: React.FC = () => {
                 >
                     <StoryCard isAddStory={true} />
                     {stories.map(story => (
-                        <StoryCard story={story} key={story._id} />
+                        <StoryCard story={story} isAddStory={false} key={story._id} />
                     ))}
                 </motion.div>
 
