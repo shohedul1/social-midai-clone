@@ -2,10 +2,27 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Plus } from 'lucide-react';
-import Image from 'next/image'; // Import next/image
+import Image from 'next/image';
 import React from 'react';
 
-const StoryCard = ({ isAddStory, story }: any) => {
+interface User {
+    username: string;
+    profilePicture?: string;
+}
+
+interface Story {
+    _id: number;
+    mediaUrl: string;
+    mediaType: "image" | "video"; // Adjust as needed
+    user: User;
+}
+
+interface StoryCardProps {
+    isAddStory: boolean;
+    story?: Story; // Optional if it's an add story button
+}
+
+const StoryCard: React.FC<StoryCardProps> = ({ isAddStory, story }) => {
     const handleStoryClick = () => {
         // Handle story click
     };
@@ -37,31 +54,29 @@ const StoryCard = ({ isAddStory, story }: any) => {
                     </div>
                 ) : (
                     <>
-
-                        {story.mediaType === "video" ? (
-                            <Image
-                                src={story.mediaUrl}
-                                alt={story.user.username}
-                                layout="fill"
-                                className="object-cover"
-                                priority // Optional: optimize loading priority
-                            />
-
-                        ) : (
+                        {story?.mediaType === "video" ? (
                             <video
-                                src={story.mediaType}
+                                src={story.mediaUrl}
                                 className="w-full h-full object-cover"
                                 controls
+                            />
+                        ) : (
+                            <Image
+                                src={story?.mediaUrl || '/fallback-image.png'} // Fallback image
+                                alt={story?.user?.username || 'Story'} // Fallback for username
+                                className="object-cover w-full h-full"
+                                width={500}
+                                height={500}
                             />
                         )}
                         <div className="absolute top-2 left-2">
                             <Avatar className="w-8 h-8">
                                 <AvatarImage />
-                                <AvatarFallback>{story.user.username[0]}</AvatarFallback>
+                                <AvatarFallback>{story?.user?.username ? story.user.username[0] : '?'}</AvatarFallback>
                             </Avatar>
                         </div>
                         <div className="absolute bottom-2 left-2 right-2">
-                            <p className="text-white text-xs font-semibold truncate">{story.user.username}</p>
+                            <p className="text-white text-xs font-semibold truncate">{story?.user?.username || 'Unknown User'}</p>
                         </div>
                     </>
                 )}
