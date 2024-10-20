@@ -12,7 +12,7 @@ import {
   Video,
 } from "lucide-react";
 import Image from "next/image";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Input } from "../../components/ui/input";
 import {
   Avatar,
