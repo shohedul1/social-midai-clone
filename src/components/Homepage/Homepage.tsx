@@ -1,5 +1,4 @@
-"use client";
-import React, { useState } from "react";
+
 import LeftSideBar from "../LeftSideBar/LeftSideBar";
 // import LeftSideBar from '../components/LeftSideBar'
 // import RightSideBar from '../components/RightSideBar'
@@ -8,7 +7,7 @@ import LeftSideBar from "../LeftSideBar/LeftSideBar";
 // import PostCard from '../posts/PostCard'
 
 const HomePage = () => {
-  const [isPostFormOpen, setIsPostFormOpen] = useState(false);
+  // const [isPostFormOpen, setIsPostFormOpen] = useState(false);
 
   // const posts = [
   //     {

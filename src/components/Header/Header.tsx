@@ -34,31 +34,16 @@ const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [theme, setTheme] = useState("light");
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      // Check if running on client-side
-      const storedTheme = localStorage.getItem("theme") || "light";
-      setTheme(storedTheme);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const root = document.documentElement;
-      if (theme === "dark") {
-        root.classList.add("dark");
-      } else {
-        root.classList.remove("dark");
-      }
-      localStorage.setItem("theme", theme);
-    }
-  }, [theme]);
+  // Theme handling...
 
   const handleCheckboxChange = () => {
     setTheme(theme === "dark" ? "light" : "dark");
   };
 
   const { toggleSidebar } = useSidebarStore();
+
+  const handleFocus = () => setIsSearchOpen(true);
+  const handleBlur = () => setIsSearchOpen(false);
 
   return (
     <header className="bg-white dark:bg-black text-foreground shadow-md fixed h-16 left-0 right-0 top-0 z-50 p-2">
@@ -77,6 +62,8 @@ const Header = () => {
                 <Input
                   className="pl-8 w-48 md:w-64 h-10 bg-gray-100 dark:bg-black rounded-full"
                   placeholder="search facebook"
+                  onFocus={handleFocus}
+                  onBlur={handleBlur}
                 />
               </div>
               {isSearchOpen && (
