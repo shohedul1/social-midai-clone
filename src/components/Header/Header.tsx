@@ -29,6 +29,7 @@ import {
   DropdownMenuTrigger,
 } from "../../components/ui/dropdown-menu";
 import useSidebarStore from "../../../store/sidebarStore";
+import { useRouter } from "next/navigation";
 
 const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -44,6 +45,12 @@ const Header = () => {
 
   const handleFocus = () => setIsSearchOpen(true);
   const handleBlur = () => setIsSearchOpen(false);
+
+  const router = useRouter();
+
+  const handleNavigation = (path: string) => {
+    router.push(path);
+  };
 
   return (
     <header className="bg-white dark:bg-black text-foreground shadow-md fixed h-16 left-0 right-0 top-0 z-50 p-2">
@@ -85,7 +92,8 @@ const Header = () => {
             </form>
           </div>
         </div>
-        <nav className="hidden md:flex justify-around w-[40%] max-w-md ">
+
+        <nav className="hidden md:flex justify-around w-[40%] max-w-md">
           {[
             { icon: Home, path: "/", name: "home" },
             { icon: Video, path: "/video-feed", name: "video" },
@@ -94,6 +102,7 @@ const Header = () => {
             return (
               <Button
                 key={name}
+                onClick={() => handleNavigation(path)} // Wrap the call in an arrow function
                 variant="ghost"
                 size="icon"
                 className="relative text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-transparent"
@@ -103,6 +112,7 @@ const Header = () => {
             );
           })}
         </nav>
+
         <div className="flex space-x-2 md:space-x-4 items-center">
           <Button
             onClick={toggleSidebar}
