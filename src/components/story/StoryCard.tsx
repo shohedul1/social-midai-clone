@@ -2,9 +2,10 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Plus } from 'lucide-react';
+import Image from 'next/image'; // Import next/image
 import React from 'react';
 
-const StoryCard = ({ isAddStory, story }:any) => {
+const StoryCard = ({ isAddStory, story }: any) => {
     const handleStoryClick = () => {
         // Handle story click
     };
@@ -36,12 +37,16 @@ const StoryCard = ({ isAddStory, story }:any) => {
                     </div>
                 ) : (
                     <>
+
                         {story.mediaType === "video" ? (
-                            <img
+                            <Image
                                 src={story.mediaUrl}
                                 alt={story.user.username}
-                                className="w-full h-full object-cover"
+                                layout="fill"
+                                className="object-cover"
+                                priority // Optional: optimize loading priority
                             />
+
                         ) : (
                             <video
                                 src={story.mediaType}
