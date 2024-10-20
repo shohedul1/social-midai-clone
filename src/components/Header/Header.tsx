@@ -12,7 +12,7 @@ import {
   Video,
 } from "lucide-react";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "../../components/ui/input";
 import {
   Avatar,
@@ -35,10 +35,23 @@ const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [theme, setTheme] = useState("light");
 
-  // Theme handling...
+  useEffect(() => {
+    const storedTheme = localStorage.getItem("theme") || "light";
+    setTheme(storedTheme);
+  }, []);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme === "dark") {
+      root.classList.add("dark");
+    } else {
+      root.classList.remove("dark");
+    }
+    localStorage.setItem("theme", theme);
+  }, [theme]);
 
   const handleCheckboxChange = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
+    setTheme((prevTheme) => (prevTheme === "dark" ? "light" : "dark"));
   };
 
   const { toggleSidebar } = useSidebarStore();
@@ -97,7 +110,7 @@ const Header = () => {
           {[
             { icon: Home, path: "/", name: "home" },
             { icon: Video, path: "/video-feed", name: "video" },
-            { icon: Users, path: "friend-list", name: "friends" },
+            { icon: Users, path: "/friends-list", name: "friends" },
           ].map(({ icon: Icon, path, name }) => {
             return (
               <Button
