@@ -14,19 +14,19 @@ const StorySection = () => {
         {
             _id: 1,
             mediaUrl: "https://res.cloudinary.com/djhjt07rh/image/upload/v1728852781/knjy8hjnl01gzfy1xap2.jpg",
-            mediaType: "image",
+            mediaType: "video",
             user: { username: "shohidul", profilePicture: "" }
         },
         {
             _id: 2,
-            mediaUrl: "https://res.cloudinary.com/djhjt07rh/video/upload/v1729445069/Forsage_busd_plan_in_english_by_owner_mr.lado____forsage_BUSD_English_plan_presentation_720P_HD_cylmai.mp4",
-            mediaType: "video",
+            mediaType: "https://res.cloudinary.com/djhjt07rh/video/upload/v1729445069/Forsage_busd_plan_in_english_by_owner_mr.lado____forsage_BUSD_English_plan_presentation_720P_HD_cylmai.mp4",
+            mediaUrl: "video",
             user: { username: "shohidul", profilePicture: "" }
         },
         {
             _id: 3,
-            mediaUrl: "https://res.cloudinary.com/djhjt07rh/video/upload/v1729445069/Forsage_busd_plan_in_english_by_owner_mr.lado____forsage_BUSD_English_plan_presentation_720P_HD_cylmai.mp4",
-            mediaType: "video",
+            mediaType: "https://res.cloudinary.com/djhjt07rh/video/upload/v1729445069/Forsage_busd_plan_in_english_by_owner_mr.lado____forsage_BUSD_English_plan_presentation_720P_HD_cylmai.mp4",
+            mediaUrl: "video",
             user: { username: "shohidul", profilePicture: "" }
         }
     ];

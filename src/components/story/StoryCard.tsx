@@ -36,7 +36,7 @@ const StoryCard = ({ isAddStory, story }:any) => {
                     </div>
                 ) : (
                     <>
-                        {story.mediaType === "image" ? (
+                        {story.mediaType === "video" ? (
                             <img
                                 src={story.mediaUrl}
                                 alt={story.user.username}
@@ -44,7 +44,7 @@ const StoryCard = ({ isAddStory, story }:any) => {
                             />
                         ) : (
                             <video
-                                src={story.mediaUrl}
+                                src={story.mediaType}
                                 className="w-full h-full object-cover"
                                 controls
                             />
