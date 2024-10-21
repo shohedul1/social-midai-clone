@@ -16,6 +16,7 @@ import { motion } from "framer-motion";
 import PostsContent from "./profileContent/PostsContent";
 import MutualFriends from "./profileContent/MutualFriends";
 import EditBio from "./profileContent/EditBio";
+import Image from "next/image";
 
 interface Bio {
     bioText: string;
@@ -129,7 +130,7 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({ activeTab, profileData,
                         <h2 className="text-xl font-semibold mb-4 dark:text-gray-300">Photos</h2>
                         <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                             {userPosts.filter(post => post.mediaType === "image" && post.mediaUrl).map(post => (
-                                <img key={post._id} src={post.mediaUrl} alt="user_all_photos" className="w-[200px] h-[150px] object-cover rounded-lg" />
+                                <Image width={500} height={500} priority key={post._id} src={post.mediaUrl} alt="user_all_photos" className="w-[200px] h-[150px] object-cover rounded-lg" />
                             ))}
                         </div>
                     </CardContent>
