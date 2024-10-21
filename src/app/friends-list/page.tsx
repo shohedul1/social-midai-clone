@@ -1,22 +1,32 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FriendCardSkeleton, NoFriendsMessage } from '@/lib/Skeleten';
 import FriendRequest from './FriendRequest';
 import FriendsSuggestion from './FriendsSuggestion';
 import LeftSideBar from '@/components/LeftSideBar/LeftSideBar';
 
 interface Friend {
-  id: number; // or string, depending on your data structure
-  name: string; // friend's name
-  profilePicture?: string; // optional property for profile picture URL
+  id: number;
+  name: string;
+  profilePicture?: string;
 }
+
 const Page = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   // Mock data for friend requests and suggestions
   const friendRequest: Friend[] = [{ id: 1, name: "John Doe", profilePicture: "" }];
   const friendSuggestion: Friend[] = [{ id: 2, name: "Jane Doe", profilePicture: "" }];
+
+  useEffect(() => {
+    // Simulate loading data
+    const timer = setTimeout(() => {
+      setLoading(false); // Set loading to false after 2 seconds
+    }, 2000);
+    
+    return () => clearTimeout(timer); // Cleanup timeout on unmount
+  }, []);
 
   const handleConfirm = (id: number) => {
     console.log(`Confirmed friend request for id: ${id}`);
