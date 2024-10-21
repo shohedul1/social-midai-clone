@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 
 const PostComments = () => {
 
-
     return (
         // comemts section list
         <div className="mt-4">

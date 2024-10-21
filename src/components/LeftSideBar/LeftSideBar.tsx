@@ -19,7 +19,7 @@ const LeftSideBar = () => {
   const { isSidebarOpen, toggleSidebar } = useSidebarStore();
   const router = useRouter();
 
-  const handleNavigation = (path: string) => {
+  const handleNavigation = (path: string, user?: any) => {
     router.push(path);
     if (isSidebarOpen) {
       toggleSidebar();
@@ -28,11 +28,10 @@ const LeftSideBar = () => {
 
   return (
     <aside
-      className={`fixed top-16 left-0 h-full w-64 p-4 transform transition-transform duration-200 ease-in-out md:translate-x-0 flex flex-col z-50 md:z-0 ${
-        isSidebarOpen
-          ? "translate-x-0 bg-white dark:bg-[rgb(36,37,38)] shadow-lg "
-          : " -translate-x-full"
-      } ${isSidebarOpen ? "md:hidden" : ""} md:bg-transparent md:shadow-none`}
+      className={`fixed top-16 left-0 h-full w-64 p-4 transform transition-transform duration-200 ease-in-out md:translate-x-0 flex flex-col z-50 md:z-0 ${isSidebarOpen
+        ? "translate-x-0 bg-white dark:bg-[rgb(36,37,38)] shadow-lg "
+        : " -translate-x-full"
+        } ${isSidebarOpen ? "md:hidden" : ""} md:bg-transparent md:shadow-none`}
     >
       <div className="flex flex-col h-full overflow-y-auto">
         {/* navigation menu yaha pr */}
@@ -71,7 +70,7 @@ const LeftSideBar = () => {
           <Button
             variant="ghost"
             className="full justify-start"
-            onClick={() => handleNavigation(`/user-profile`)}
+            onClick={() => handleNavigation(`/user-profile/1`)}
           >
             <User className="mr-4" /> Profile
           </Button>
