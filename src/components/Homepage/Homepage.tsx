@@ -5,11 +5,7 @@ import NewPostForm from "../posts/NewPostForm";
 import StorySection from "../story/StorySection";
 import PostCard from "../posts/PostCard";
 import RightSideBar from "../RightSideBar/RightSideBar";
-// import LeftSideBar from '../components/LeftSideBar'
-// import RightSideBar from '../components/RightSideBar'
-// import StorySection from '../story/StorySection'
-// import NewPostForm from '../posts/NewPostForm'
-// import PostCard from '../posts/PostCard'
+
 
 const HomePage = () => {
   const [isPostFormOpen, setIsPostFormOpen] = useState(false);
