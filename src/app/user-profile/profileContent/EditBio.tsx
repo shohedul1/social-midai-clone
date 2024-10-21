@@ -5,14 +5,30 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Save } from 'lucide-react';
 import React from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, SubmitHandler } from 'react-hook-form';
 
-const EditBio = ({ isOpen, onClose, initialData }:any) => {
-  const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm({
+interface BioFormData {
+  bioText: string;
+  liveIn: string;
+  relationship: string;
+  workplace: string;
+  education: string;
+  phone?: string; // Optional
+  hometown: string;
+}
+
+interface EditBioProps {
+  isOpen: boolean;
+  onClose: () => void;
+  initialData: BioFormData;
+}
+
+const EditBio: React.FC<EditBioProps> = ({ isOpen, onClose, initialData }) => {
+  const { register, handleSubmit, formState: { isSubmitting } } = useForm<BioFormData>({
     defaultValues: initialData,
   });
 
-  const handleEditBio = (data:any) => {
+  const handleEditBio: SubmitHandler<BioFormData> = (data) => {
     // Mock submission of data
     console.log('Submitted Data:', data);
     onClose();

@@ -11,9 +11,20 @@ import {
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal, UserX } from "lucide-react";
 
-const MutualFriends = ({ isOwner }:any) => {
+interface Friend {
+  _id: string;
+  username: string;
+  profilePicture?: string | null; // Optional and can be null
+  followerCount: number;
+}
+
+interface MutualFriendsProps {
+  isOwner: boolean;
+}
+
+const MutualFriends: React.FC<MutualFriendsProps> = ({ isOwner }) => {
   // Mock mutual friends data
-  const mutualFriends = [
+  const mutualFriends: Friend[] = [
     {
       _id: "1",
       username: "john_doe",
@@ -34,8 +45,8 @@ const MutualFriends = ({ isOwner }:any) => {
     },
   ];
 
-  const handleUnfollow = (userId:any) => {
-    console.log('hellow')
+  const handleUnfollow = (username: string) => {
+    console.log(`Unfollowed: ${username}`);
   };
 
   return (

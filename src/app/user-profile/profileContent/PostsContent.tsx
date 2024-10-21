@@ -32,7 +32,7 @@ interface PostsContentProps {
     onLike: () => void;
 }
 
-const PostsContent: React.FC<PostsContentProps> = ({ post, isLiked, onShare, onComment, onLike }) => {
+const PostsContent: React.FC<PostsContentProps> = ({ post, isLiked, onShare, onLike }) => {
     const [showComments, setShowComments] = useState(false);
     const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
     const commentInputRef = useRef<HTMLInputElement | null>(null);

@@ -18,6 +18,11 @@ import MutualFriends from "./profileContent/MutualFriends";
 import EditBio from "./profileContent/EditBio";
 import Image from "next/image";
 
+interface User {
+    username: string;
+    profilePicture?: string;
+}
+
 interface Bio {
     bioText: string;
     liveIn: string;
@@ -38,34 +43,87 @@ interface ProfileData {
 
 interface Post {
     _id: string;
-    mediaType: string;
-    mediaUrl: string;
+    user: User; // Update this to match the PostsContent expectation
+    content: string;
+    mediaUrl?: string;
+    mediaType?: 'image' | 'video';
+    createdAt: string;
+    likeCount: number;
+    commentCount: number;
+    shareCount: number;
 }
 
 type TabNames = 'posts' | 'about' | 'friends' | 'photos';
 
 interface ProfileDetailsProps {
-    activeTab: TabNames; // Using the TabNames type
+    activeTab: TabNames;
     profileData: ProfileData;
     userPosts: Post[];
     isOwner: boolean;
 }
 
-const ProfileDetails: React.FC<ProfileDetailsProps> = ({ activeTab, profileData, userPosts, isOwner }) => {
+// Mock data
+const mockProfileData: ProfileData = {
+    username: "JohnDoe",
+    bio: {
+        bioText: "Lorem ipsum dolor sit amet.",
+        liveIn: "New York",
+        relationship: "Single",
+        hometown: "Chicago",
+        workplace: "Tech Company",
+        education: "State University",
+        phone: "123-456-7890",
+    },
+    email: "johndoe@example.com",
+    dateOfBirth: "1990-01-01",
+    followingCount: 150,
+};
+
+const mockUserPosts: Post[] = [
+    {
+        _id: "1",
+        user: { username: "JohnDoe", profilePicture: "/path/to/profile.jpg" }, // Added user object
+        content: "Check out my new photo!",
+        mediaType: "image",
+        mediaUrl: "/path/to/image1.jpg",
+        createdAt: "2023-10-01",
+        likeCount: 10,
+        commentCount: 2,
+        shareCount: 3,
+    },
+    {
+        _id: "2",
+        user: { username: "JohnDoe", profilePicture: "/path/to/profile.jpg" }, // Added user object
+        content: "Another day, another adventure!",
+        mediaType: "image",
+        mediaUrl: "/path/to/image2.jpg",
+        createdAt: "2023-10-02",
+        likeCount: 5,
+        commentCount: 1,
+        shareCount: 0,
+    },
+];
+
+const ProfileDetails: React.FC<ProfileDetailsProps> = ({
+    activeTab,
+    profileData = mockProfileData,
+    userPosts = mockUserPosts,
+    isOwner = true,
+}) => {
     const [isEditBioModel, setIsEditBioModel] = useState(false);
-    const likePosts = new Set<string>(); // For demonstration, empty set for liked posts
+    const likePosts = new Set<string>();
 
     const tabContent: Record<TabNames, JSX.Element> = {
         posts: (
             <div className="flex flex-col lg:flex-row gap-6">
                 <div className="w-full lg:w-[70%] space-y-6 mb-4">
-                    {userPosts.map((post: any) => (
+                    {userPosts.map((post) => (
                         <PostsContent
                             key={post._id}
                             post={post}
                             isLiked={likePosts.has(post._id)}
-                            onLike={() => console.log(`Liked post ${post._id}`)} // Replace with actual like logic
-                            onShare={async () => console.log(`Shared post ${post._id}`)} // Replace with actual share logic
+                            onLike={() => console.log(`Liked post ${post._id}`)}
+                            onShare={async () => console.log(`Shared post ${post._id}`)}
                         />
                     ))}
                 </div>
@@ -117,7 +175,7 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({ activeTab, profileData,
                 </Card>
             </motion.div>
         ),
-        friends: <MutualFriends isOwner={isOwner} />, // Replace with actual content
+        friends: <MutualFriends isOwner={isOwner} />,
         photos: (
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -142,16 +200,7 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({ activeTab, profileData,
     return (
         <div>
             {tabContent[activeTab] || null}
-            <EditBio isOpen={isEditBioModel} onClose={() => setIsEditBioModel(false)} initialData={{
-                bioText: "This is a sample bio.",
-                liveIn: "Sample City",
-                relationship: "Single",
-                workplace: "Sample Company",
-                education: "Sample University",
-                phone: "123-456-7890",
-                hometown: "Sample Town"
-            }} />
-
+            <EditBio isOpen={isEditBioModel} onClose={() => setIsEditBioModel(false)} initialData={profileData.bio} />
         </div>
     );
 };
