@@ -19,7 +19,7 @@ const LeftSideBar = () => {
   const { isSidebarOpen, toggleSidebar } = useSidebarStore();
   const router = useRouter();
 
-  const handleNavigation = (path: string, user?: any) => {
+  const handleNavigation = (path: string) => {
     router.push(path);
     if (isSidebarOpen) {
       toggleSidebar();

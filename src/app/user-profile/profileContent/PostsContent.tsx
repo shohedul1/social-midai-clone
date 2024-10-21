@@ -47,7 +47,7 @@ const PostsContent: React.FC<PostsContentProps> = ({ post, isLiked, onShare, onL
         }, 0);
     };
 
-    const generateSharedLink = () => `http://localhost:3000/${post?.id}`;
+    const generateSharedLink = () => `http://localhost:3000/${post?._id}`;
 
     const handleShare = (platform: string) => {
         const url = generateSharedLink();
@@ -72,6 +72,7 @@ const PostsContent: React.FC<PostsContentProps> = ({ post, isLiked, onShare, onL
         }
         window.open(shareUrl, '_blank');
         setIsShareDialogOpen(false);
+        onShare();  // Call onShare after sharing
     };
 
     return (
@@ -178,7 +179,6 @@ const PostsContent: React.FC<PostsContentProps> = ({ post, isLiked, onShare, onL
                                 exit={{ opacity: 0, height: 0 }}
                                 transition={{ duration: 0.3 }}
                             >
-
                                 <PostComments />
                             </motion.div>
                         )}
@@ -190,3 +190,4 @@ const PostsContent: React.FC<PostsContentProps> = ({ post, isLiked, onShare, onL
 };
 
 export default PostsContent;
+
