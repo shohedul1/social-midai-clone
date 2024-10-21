@@ -7,6 +7,7 @@ import { MessageCircle, MoreHorizontal, Share2, ThumbsUp } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import PostComments from '@/components/posts/PostComments';
+import Image from 'next/image';
 
 interface User {
     username: string;
@@ -105,7 +106,10 @@ const PostsContent: React.FC<PostsContentProps> = ({ post, isLiked, onShare, onL
                     </div>
                     <p className='mb-4'>{post?.content}</p>
                     {post?.mediaUrl && post.mediaType === 'image' && (
-                        <img
+                        <Image
+                            width={500}
+                            height={500}
+                            priority
                             src={post?.mediaUrl}
                             alt='post_image'
                             className='w-full h-auto rounded-lg mb-4'
