@@ -30,6 +30,7 @@ import {
 } from "../../components/ui/dropdown-menu";
 import useSidebarStore from "../../../store/sidebarStore";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -69,12 +70,14 @@ const Header = () => {
     <header className="bg-white dark:bg-black text-foreground shadow-md fixed h-16 left-0 right-0 top-0 z-50 p-2">
       <div className="mx-auto flex items-center justify-between p-2">
         <div className="flex items-center gap-7 md:gap-4">
-          <Image
-            src={"/images/facebook.webp"}
-            width={40}
-            height={40}
-            alt="image"
-          />
+          <Link href={"/"}>
+            <Image
+              src={"/images/facebook.webp"}
+              width={40}
+              height={40}
+              alt="image"
+            />
+          </Link>
           <div className="relative">
             <form>
               <div className="relative">
