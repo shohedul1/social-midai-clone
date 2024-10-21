@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ExternalLink, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import Image from 'next/image';
 
 
 const RightSideBar = () => {
@@ -68,9 +69,12 @@ const RightSideBar = () => {
                                 transition={{ delay: index * 0.1 }}
                                 className='flex flex-col items-center space-x-4 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200'
                             >
-                                <img
+                                <Image
                                     src={sponser.image}
                                     alt={sponser.name}
+                                    width={500}
+                                    height={500}
+                                    priority
                                     className='w-50 h-40 object-contain rounded-md'
                                 />
                                 <div className='flex-1 '>

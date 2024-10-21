@@ -1,7 +1,7 @@
 'use client';
 
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import StoryCard from './StoryCard';
 import { motion } from "framer-motion";
 import { Button } from '@/components/ui/button';
@@ -22,7 +22,8 @@ const StorySection: React.FC = () => {
     const [scrollPosition, setScrollPosition] = useState(0);
     const [maxScroll, setMaxScroll] = useState(0);
     const containerRef = useRef<HTMLDivElement | null>(null);
-    const stories: Story[] = [
+    
+    const stories: Story[] = useMemo(() => [
         {
             _id: 1,
             mediaUrl: "https://res.cloudinary.com/djhjt07rh/image/upload/v1728852781/knjy8hjnl01gzfy1xap2.jpg",
@@ -41,7 +42,7 @@ const StorySection: React.FC = () => {
             mediaType: "video",
             user: { username: "shohidul" }
         }
-    ];
+    ], []);
 
     useEffect(() => {
         const container = containerRef.current;
@@ -54,7 +55,7 @@ const StorySection: React.FC = () => {
             window.addEventListener("resize", updateMaxScroll);
             return () => window.removeEventListener("resize", updateMaxScroll);
         }
-    }, [stories]);
+    }, [stories]); // This can also be updated to avoid `stories` as a dependency
 
     const scroll = (direction: 'left' | 'right') => {
         const container = containerRef.current;
