@@ -1,15 +1,34 @@
 'use client';
+
 import React, { useState } from 'react';
 import { FriendCardSkeleton, NoFriendsMessage } from '@/lib/Skeleten';
 import FriendRequest from './FriendRequest';
 import FriendsSuggestion from './FriendsSuggestion';
 import LeftSideBar from '@/components/LeftSideBar/LeftSideBar';
 
+interface Friend {
+  id: number; // or string, depending on your data structure
+  name: string; // friend's name
+  profilePicture?: string; // optional property for profile picture URL
+}
 const Page = () => {
   const [loading, setLoading] = useState(false);
 
-  const friendRequest = [{}];
-  const friendSuggestion = [{}];
+  // Mock data for friend requests and suggestions
+  const friendRequest: Friend[] = [{ id: 1, name: "John Doe", profilePicture: "" }];
+  const friendSuggestion: Friend[] = [{ id: 2, name: "Jane Doe", profilePicture: "" }];
+
+  const handleConfirm = (id: number) => {
+    console.log(`Confirmed friend request for id: ${id}`);
+  };
+
+  const handleDelete = (id: number) => {
+    console.log(`Deleted friend request for id: ${id}`);
+  };
+
+  const handleAddFriend = (id: number) => {
+    console.log(`Added friend with id: ${id}`);
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-[rgb(36,37,38)]">
@@ -25,8 +44,13 @@ const Page = () => {
               description="Looks like you are all caught up! Why not explore and connect with new people?"
             />
           ) : (
-            friendRequest.map((friend: any, index: number) => (
-              <FriendRequest key={index} friend={friend} />
+            friendRequest.map((friend) => (
+              <FriendRequest
+                key={friend.id}
+                friend={friend}
+                onConfirm={handleConfirm}
+                onDelete={handleDelete}
+              />
             ))
           )}
         </div>
@@ -37,12 +61,16 @@ const Page = () => {
             <FriendCardSkeleton />
           ) : friendSuggestion.length === 0 ? (
             <NoFriendsMessage
-              text="No Friend Suggestion"
+              text="No Friend Suggestions"
               description="Looks like you are all caught up! Why not explore and connect with new people?"
             />
           ) : (
-            friendSuggestion.map((friend: any, index: any) => (
-              <FriendsSuggestion key={index} friend={friend} />
+            friendSuggestion.map((friend) => (
+              <FriendsSuggestion
+                key={friend.id}
+                friend={friend}
+                onAction={handleAddFriend}
+              />
             ))
           )}
         </div>
