@@ -11,26 +11,35 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import PostComments from '@/components/posts/PostComments';
 import Image from 'next/image';
 
-interface User {
+export interface User {
+    _id: string; // or number
     username: string;
-    profilePicture?: string;
+    email: string;
+    gender: string;
+    dateOfBirth: string;
+    profilePicture: string;
+    coverPhoto: string;
+    followers: string[];
+    following: string[];
+    followerCount: number;
+    followingCount: number;
+    createdAt: string;
+    updatedAt: string;
 }
 
-// Comment Interface
-interface Comment {
-    user: User;
+export interface Comment {
+    user: User; // Reference to User interface
     text: string;
     createdAt: string;
     _id: string;
 }
 
-// Post Interface
-interface Post {
+export interface Post {
     _id: string;
     user: User;
     content: string;
-    mediaUrl?: string; // mediaUrl could be optional
-    mediaType?: 'image' | 'video'; // mediaType could be optional
+    mediaUrl: string;
+    mediaType: 'image' | 'video';
     likeCount: number;
     commentCount: number;
     shareCount: number;
@@ -197,8 +206,8 @@ const PostsContent: React.FC<PostsContentProps> = ({ post, isLiked, onShare, onL
                                 transition={{ duration: 0.3 }}
                             >
                                 <PostComments
-                                    post={{ comments: post.comments }} // Ensure post.comments is passed correctly
-                                    onComment={onComment} // Handle comment submission
+                                    comments={post.comments} // Ensure to pass the comments array
+                                    onComment={onComment}
                                     commentInputRef={commentInputRef}
                                 />
                             </motion.div>
