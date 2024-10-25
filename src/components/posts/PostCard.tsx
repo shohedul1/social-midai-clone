@@ -16,6 +16,8 @@ import {
 import PostComments from "./PostComments";
 import Image from "next/image";
 
+
+// types.ts
 interface Comment {
     user: User;
     text: string;
@@ -29,31 +31,31 @@ interface User {
     username: string;
 }
 
-interface Post {
-    _id: string;
-    user: User;
-    content: string;
-    mediaUrl: string;
-    mediaType: 'image' | 'video';
-    likeCount: number;
-    commentCount: number;
-    shareCount: number;
-    createdAt: string;
-    updatedAt: string;
-    likes: string[];
-    comments: Comment[];
-    share: string[];
+export interface Post {
+    _id: string; // Unique identifier for the post
+    user: User; // User who created the post
+    content: string; // Content of the post
+    mediaUrl: string; // URL for any media associated with the post
+    mediaType: 'image' | 'video'; // Type of media
+    likeCount: number; // Number of likes
+    commentCount: number; // Number of comments
+    shareCount: number; // Number of shares
+    createdAt: string; // Creation date
+    updatedAt: string; // Last updated date
+    likes: string[]; // Array of user IDs who liked the post
+    comments: Comment[]; // Array of comments on the post
+    share: string[]; // Array of user IDs who shared the post
 }
+
 
 // Props for PostCard
 interface PostCardProps {
     post: Post;
     isLiked: boolean;
-    onShare: () => void;
-    onComment: (comment: Comment) => void;
     onLike: () => void;
+    onComment: (comment: Comment) => Promise<void>;
+    onShare: () => Promise<void>;
 }
-
 
 const PostCard: React.FC<PostCardProps> = ({ post, isLiked, onShare, onComment, onLike }) => {
     const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
