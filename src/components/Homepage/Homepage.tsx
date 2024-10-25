@@ -1,3 +1,4 @@
+'use client';
 import React, { useEffect, useState } from "react";
 import NewPostForm from "../posts/NewPostForm";
 import PostCard from "../posts/PostCard";
