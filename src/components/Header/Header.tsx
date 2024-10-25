@@ -31,10 +31,20 @@ import {
 import useSidebarStore from "../../../store/sidebarStore";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { logout } from "@/service/auth.service";
+import userStore from "../../../store/userStore";
+import toast from "react-hot-toast";
 
 const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [theme, setTheme] = useState("light");
+  const { user, clearUser } = userStore();
+
+  const userPlaceholder = user?.username
+    ?.split(" ")
+    .map((name) => name[0])
+    .join("");
+
 
   useEffect(() => {
     const storedTheme = localStorage.getItem("theme") || "light";
@@ -66,6 +76,20 @@ const Header = () => {
     router.push(path);
   };
 
+
+  const handleLogout = async () => {
+    try {
+      const result = await logout();
+      if (result?.status == "success") {
+        router.push("/user-login");
+        clearUser();
+      }
+      toast.success("user logged out successfully");
+    } catch (error) {
+      console.log(error);
+      toast.error("failed to log out");
+    }
+  };
   return (
     <header className="bg-white dark:bg-black text-foreground shadow-md fixed h-16 left-0 right-0 top-0 z-50 p-2">
       <div className="mx-auto flex items-center justify-between p-2">
@@ -155,11 +179,17 @@ const Header = () => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                <Avatar>
-                  <AvatarImage />
-                  <AvatarFallback className="dark:bg-gray-100">
-                    D
-                  </AvatarFallback>
+                <Avatar className="h-8 w-8 mr-2">
+                  {user?.profilePicture ? (
+                    <AvatarImage
+                      src={user?.profilePicture}
+                      alt={user?.username}
+                    />
+                  ) : (
+                    <AvatarFallback className="dark:bg-gray-400">
+                      {userPlaceholder}
+                    </AvatarFallback>
+                  )}
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
@@ -167,27 +197,36 @@ const Header = () => {
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
                   <div className="flex items-center">
-                    <Avatar>
-                      <AvatarImage />
-                      <AvatarFallback className="dark:bg-gray-400">
-                        D
-                      </AvatarFallback>
+                    <Avatar className="h-8 w-8 mr-2">
+                      {user?.profilePicture ? (
+                        <AvatarImage
+                          src={user?.profilePicture}
+                          alt={user?.username}
+                        />
+                      ) : (
+                        <AvatarFallback className="dark:bg-gray-400">
+                          {userPlaceholder}
+                        </AvatarFallback>
+                      )}
                     </Avatar>
+
                     <div className="">
                       <p className="text-sm font-medium leading-none">
-                        Dheeraj Agrahari
+                        {user?.username}
                       </p>
-                      <p className="text-xs mt-2 text-gray-600 font-medium leading-none">
-                        Dheeraj Agrahari
+                      <p className="text-xs mt-2 text-gray-600 leading-none">
+                        {user?.email}
                       </p>
                     </div>
                   </div>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <Users />
-                <span className="ml-2">Profile</span>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={() => handleNavigation(`/user-profile/${user?._id}`)}
+              >
+                <Users /> <span className="ml-2">Profile</span>
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <MessageCircle />
@@ -210,7 +249,9 @@ const Header = () => {
                   </>
                 )}
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={handleLogout}
+              >
                 <LogOut />
                 <span className="ml-2">Logout</span>
               </DropdownMenuItem>
@@ -218,7 +259,7 @@ const Header = () => {
           </DropdownMenu>
         </div>
       </div>
-    </header>
+    </header >
   );
 };
 

@@ -14,15 +14,39 @@ import {
 } from "lucide-react";
 import useSidebarStore from "../../../store/sidebarStore";
 import { useRouter } from "next/navigation";
+import { logout } from "@/service/auth.service";
+import userStore from "../../../store/userStore";
+import toast from "react-hot-toast";
 
 const LeftSideBar = () => {
   const { isSidebarOpen, toggleSidebar } = useSidebarStore();
+
   const router = useRouter();
+  const { user, clearUser } = userStore();
+
+  const userPlaceholder = user?.username
+    ?.split(" ")
+    .map((name) => name[0])
+    .join("");
 
   const handleNavigation = (path: string) => {
     router.push(path);
     if (isSidebarOpen) {
       toggleSidebar();
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      const result = await logout();
+      if (result?.status == "success") {
+        router.push("/user-login");
+        clearUser();
+      }
+      toast.success("user logged out successfully");
+    } catch (error) {
+      console.log(error);
+      toast.error("failed to log out");
     }
   };
 
@@ -36,12 +60,17 @@ const LeftSideBar = () => {
       <div className="flex flex-col h-full overflow-y-auto">
         {/* navigation menu yaha pr */}
         <nav className="space-y-4 flex-grow">
-          <div className="flex items-center space-x-2 cursor-pointer ">
+          <div className="flex items-center space-x-2 cursor-pointer" onClick={() => handleNavigation(`/user-profile/${user?._id}`)}>
             <Avatar className="h-10 w-10">
-              <AvatarImage />
-              <AvatarFallback className="dark:bg-gray-400">D</AvatarFallback>
+              {user?.profilePicture ? (
+                <AvatarImage src={user?.profilePicture} alt={user?.username} />
+              ) : (
+                <AvatarFallback className="dark:bg-gray-400">
+                  {userPlaceholder}
+                </AvatarFallback>
+              )}
             </Avatar>
-            <span className="font-semibold">shohidul</span>
+            <span className="font-semibold">{user?.username}</span>
           </div>
           <Button
             variant="ghost"
@@ -70,7 +99,7 @@ const LeftSideBar = () => {
           <Button
             variant="ghost"
             className="full justify-start"
-            onClick={() => handleNavigation(`/user-profile/1`)}
+            onClick={() => handleNavigation(`/user-profile/${user?._id}`)}
           >
             <User className="mr-4" /> Profile
           </Button>
@@ -82,15 +111,21 @@ const LeftSideBar = () => {
         {/* footer section */}
         <div className="mb-16">
           <Separator className="my-4" />
-          <div className="flex items-center space-x-2 mb-4 cursor-pointer ">
+          <div className="flex items-center space-x-2 mb-4 cursor-pointer " onClick={() => handleNavigation(`/user-profile/${user?._id}`)}>
             <Avatar className="h-10 w-10">
-              <AvatarImage />
-              <AvatarFallback className="dark:bg-gray-400">D</AvatarFallback>
+              {user?.profilePicture ? (
+                <AvatarImage src={user?.profilePicture} alt={user?.username} />
+              ) : (
+                <AvatarFallback className="dark:bg-gray-400">
+                  {userPlaceholder}
+                </AvatarFallback>
+              )}
             </Avatar>
-            <span className="font-semibold">shohidul</span>
+            <span className="font-semibold">{user?.username}</span>
           </div>
+
           <div className="text-xs text-muted-foreground space-y-1">
-            <Button variant="ghost" className="cursor-pointer -ml-4 ">
+            <Button variant="ghost" className="cursor-pointer -ml-4 " onClick={handleLogout} >
               <LogOut /> <span className="ml-2 font-bold text-md">Logout</span>
             </Button>
             <p>Privacy · Terms · Advertising ·</p>

@@ -105,9 +105,9 @@ const ProfileTabs: React.FC = () => {
                     <TabsTrigger value="photos">Photos</TabsTrigger>
                 </TabsList>
                 <div className='mt-6'>
-                    <ProfileDetails 
-                        activeTab={activeTab} 
-                        profileData={mockProfileData} 
+                    <ProfileDetails
+                        activeTab={activeTab}
+                        profileData={mockProfileData}
                         userPosts={mockUserPosts}
                         isOwner={true} // Simulating that the current user is the profile owner
                     />
