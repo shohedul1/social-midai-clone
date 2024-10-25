@@ -1,4 +1,4 @@
-'use client';
+"use client"
 import React, { useEffect, useState } from "react";
 import NewPostForm from "../posts/NewPostForm";
 import PostCard from "../posts/PostCard";
@@ -8,6 +8,7 @@ import LeftSideBar from "../LeftSideBar/LeftSideBar";
 import StorySection from "../story/StorySection";
 import RightSideBar from "../RightSideBar/RightSideBar";
 
+// types.ts (or wherever you define your types)
 interface Comment {
   user: string;
   text: string;
@@ -20,8 +21,6 @@ interface User {
   profilePicture: string;
   username: string;
 }
-
-
 
 interface Post {
   _id: string;
@@ -39,11 +38,12 @@ interface Post {
   share: string[];
 }
 
-const HomePage = () => {
-  const [isPostFormOpen, setIsPostFormOpen] = useState(false);
-  const [likePosts, setLikePosts] = useState(new Set<string>());
+
+
+const HomePage: React.FC = () => {
+  const [isPostFormOpen, setIsPostFormOpen] = useState<boolean>(false);
+  const [likePosts, setLikePosts] = useState<Set<string>>(new Set());
   const { posts, fetchPost, handleLikePost, handleCommentPost, handleSharePost } = usePostStore();
-  console.log('posts', posts);
 
   useEffect(() => {
     fetchPost();
@@ -93,9 +93,9 @@ const HomePage = () => {
                 <PostCard
                   key={post._id}
                   post={post}
-                  isLiked={likePosts.has(post?._id)}
+                  isLiked={likePosts.has(post._id)}
                   onLike={() => handleLike(post._id)}
-                  onComment={async (comment: Comment) => {
+                  onComment={async (comment) => {
                     await handleCommentPost(post._id, comment.text);
                     await fetchPost();
                   }}
@@ -108,6 +108,7 @@ const HomePage = () => {
             </div>
           </div>
         </div>
+
         <div className="hidden lg:block lg:w-64 xl:w-80 fixed right-0 top-16 bottom-0 overflow-y-auto p-4">
           <RightSideBar />
         </div>

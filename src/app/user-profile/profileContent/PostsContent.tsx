@@ -14,26 +14,41 @@ interface User {
     profilePicture?: string;
 }
 
+// Comment Interface
+interface Comment {
+    user: User;
+    text: string;
+    createdAt: string;
+    _id: string;
+}
+
+// Post Interface
 interface Post {
     _id: string;
     user: User;
     content: string;
-    mediaUrl?: string;
-    mediaType?: 'image' | 'video';
-    createdAt: string;
+    mediaUrl?: string; // mediaUrl could be optional
+    mediaType?: 'image' | 'video'; // mediaType could be optional
     likeCount: number;
     commentCount: number;
     shareCount: number;
+    createdAt: string;
+    updatedAt: string;
+    likes: string[];
+    comments: Comment[];
+    share: string[];
 }
 
+// Props for PostCard
 interface PostsContentProps {
     post: Post;
     isLiked: boolean;
     onShare: () => void;
+    onComment: (comment: Comment) => void;
     onLike: () => void;
 }
 
-const PostsContent: React.FC<PostsContentProps> = ({ post, isLiked, onShare, onLike }) => {
+const PostsContent: React.FC<PostsContentProps> = ({ post, isLiked, onShare, onLike,onComment }) => {
     const [showComments, setShowComments] = useState(false);
     const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
     const commentInputRef = useRef<HTMLInputElement | null>(null);
@@ -179,7 +194,11 @@ const PostsContent: React.FC<PostsContentProps> = ({ post, isLiked, onShare, onL
                                 exit={{ opacity: 0, height: 0 }}
                                 transition={{ duration: 0.3 }}
                             >
-                                <PostComments />
+                                <PostComments
+                                    post={{ comments: post.comments }} // Ensure post.comments is passed correctly
+                                    onComment={onComment}
+                                    commentInputRef={commentInputRef}
+                                />
                             </motion.div>
                         )}
                     </AnimatePresence>

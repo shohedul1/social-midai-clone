@@ -17,26 +17,25 @@ import PostComments from "./PostComments";
 import Image from "next/image";
 
 // User Interface
-interface User {
-    username: string;
-    profilePicture?: string;
-}
-
-// Comment Interface
 interface Comment {
-    user: User;
+    user: string;
     text: string;
     createdAt: string;
     _id: string;
 }
 
-// Post Interface
+interface User {
+    email: string;
+    profilePicture: string;
+    username: string;
+}
+
 interface Post {
     _id: string;
     user: User;
     content: string;
-    mediaUrl?: string; // mediaUrl could be optional
-    mediaType?: 'image' | 'video'; // mediaType could be optional
+    mediaUrl: string;
+    mediaType: 'image' | 'video';
     likeCount: number;
     commentCount: number;
     shareCount: number;
@@ -46,7 +45,6 @@ interface Post {
     comments: Comment[];
     share: string[];
 }
-
 // Props for PostCard
 interface PostCardProps {
     post: Post;
