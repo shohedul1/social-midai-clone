@@ -1,39 +1,64 @@
-
-
-
-import { ChevronDown, ChevronUp, Send } from "lucide-react";
 import React, { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { formatDate } from "@/lib/utils";
+import { Send } from "lucide-react";
 import userStore from "../../../store/userStore";
 
-interface User {
+
+// types.ts (or interfaces.ts)
+export interface User {
+    _id: string; // or number
     username: string;
-    profilePicture?: string;
+    email: string;
+    gender: string;
+    dateOfBirth: string;
+    profilePicture: string;
+    coverPhoto: string;
+    followers: string[];
+    following: string[];
+    followerCount: number;
+    followingCount: number;
+    createdAt: string;
+    updatedAt: string;
 }
 
-interface Comment {
-    user: User;
+export interface Comment {
+    user: User; // Reference to User interface
     text: string;
     createdAt: string;
     _id: string;
 }
 
-interface PostCommentsProps {
-    post: {
-        comments: Comment[];
-    };
-    onComment: (comment: Comment) => void;
-    commentInputRef: React.RefObject<HTMLInputElement>; // Update here to HTMLInputElement
+export interface Post {
+    _id: string;
+    user: User;
+    content: string;
+    mediaUrl: string;
+    mediaType: 'image' | 'video';
+    likeCount: number;
+    commentCount: number;
+    shareCount: number;
+    createdAt: string;
+    updatedAt: string;
+    likes: string[];
+    comments: Comment[];
+    share: string[];
 }
 
-const PostComments: React.FC<PostCommentsProps> = ({ post, onComment, commentInputRef }) => {
+
+interface PostCommentsProps {
+    comments: Comment[];
+    onComment: (comment: Comment) => void;
+    commentInputRef: React.RefObject<HTMLInputElement>;
+}
+
+
+const PostComments: React.FC<PostCommentsProps> = ({ comments, onComment, commentInputRef }) => {
     const [showAllComments, setShowAllComments] = useState(false);
     const [commentText, setCommentText] = useState("");
     const { user } = userStore();
-    const visibleComments = showAllComments ? post.comments : post.comments.slice(0, 2);
+    const visibleComments = showAllComments ? comments : comments.slice(0, 2);
 
     const handleCommentSubmit = async () => {
         if (commentText.trim()) {
@@ -65,7 +90,7 @@ const PostComments: React.FC<PostCommentsProps> = ({ post, onComment, commentInp
                                 <AvatarImage src={comment.user.profilePicture} alt={comment.user.username} />
                             ) : (
                                 <AvatarFallback className="dark:bg-gray-400">
-                                    {comment.user.username.split(" ")[0].charAt(0)}
+                                    {comment.user.username.charAt(0)}
                                 </AvatarFallback>
                             )}
                         </Avatar>
@@ -77,20 +102,20 @@ const PostComments: React.FC<PostCommentsProps> = ({ post, onComment, commentInp
                             <div className="flex items-center mt-1 text-xs text-gray-400">
                                 <Button variant="ghost" size="sm">Like</Button>
                                 <Button variant="ghost" size="sm">Reply</Button>
-                                <span>{formatDate(comment.createdAt)}</span>
+                                <span>{new Date(comment.createdAt).toLocaleString()}</span>
                             </div>
                         </div>
                     </div>
                 ))}
-                {post.comments.length > 2 && (
+                {comments.length > 2 && (
                     <p
                         className="w-40 mt-2 text-blue-500 dark:text-gray-300 cursor-pointer"
                         onClick={() => setShowAllComments(!showAllComments)}
                     >
                         {showAllComments ? (
-                            <>Show Less <ChevronUp className="ml-2 h-4 w-4" /></>
+                            <>Show Less</>
                         ) : (
-                            <>Show All Comments <ChevronDown className="ml-2 h-4 w-4" /></>
+                            <>Show All Comments</>
                         )}
                     </p>
                 )}

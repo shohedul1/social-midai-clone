@@ -16,21 +16,31 @@ import {
 import PostComments from "./PostComments";
 import Image from "next/image";
 
-// User Interface
-interface Comment {
-    user: string;
+// types.ts (or interfaces.ts)
+export interface User {
+    _id: string; // or number
+    username: string;
+    email: string;
+    gender: string;
+    dateOfBirth: string;
+    profilePicture: string;
+    coverPhoto: string;
+    followers: string[];
+    following: string[];
+    followerCount: number;
+    followingCount: number;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface Comment {
+    user: User; // Reference to User interface
     text: string;
     createdAt: string;
     _id: string;
 }
 
-interface User {
-    email: string;
-    profilePicture: string;
-    username: string;
-}
-
-interface Post {
+export interface Post {
     _id: string;
     user: User;
     content: string;
@@ -45,6 +55,7 @@ interface Post {
     comments: Comment[];
     share: string[];
 }
+
 // Props for PostCard
 interface PostCardProps {
     post: Post;
@@ -53,6 +64,7 @@ interface PostCardProps {
     onComment: (comment: Comment) => void;
     onLike: () => void;
 }
+
 
 const PostCard: React.FC<PostCardProps> = ({ post, isLiked, onShare, onComment, onLike }) => {
     const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
@@ -210,7 +222,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, isLiked, onShare, onComment, 
                                 transition={{ duration: 0.3 }}
                             >
                                 <PostComments
-                                    post={{ comments: post.comments }} // Ensure post.comments is passed correctly
+                                    comments={post.comments} // Ensure to pass the comments array
                                     onComment={onComment}
                                     commentInputRef={commentInputRef}
                                 />
