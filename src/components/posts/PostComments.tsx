@@ -7,44 +7,16 @@ import userStore from "../../../store/userStore";
 
 
 // types.ts (or interfaces.ts)
-export interface User {
-    _id: string; // or number
-    username: string;
-    email: string;
-    gender: string;
-    dateOfBirth: string;
-    profilePicture: string;
-    coverPhoto: string;
-    followers: string[];
-    following: string[];
-    followerCount: number;
-    followingCount: number;
-    createdAt: string;
-    updatedAt: string;
-}
-
-export interface Comment {
-    user: User; // Reference to User interface
+interface Comment {
+    user: string;
     text: string;
     createdAt: string;
     _id: string;
 }
 
-export interface Post {
-    _id: string;
-    user: User;
-    content: string;
-    mediaUrl: string;
-    mediaType: 'image' | 'video';
-    likeCount: number;
-    commentCount: number;
-    shareCount: number;
-    createdAt: string;
-    updatedAt: string;
-    likes: string[];
-    comments: Comment[];
-    share: string[];
-}
+
+
+
 
 
 interface PostCommentsProps {

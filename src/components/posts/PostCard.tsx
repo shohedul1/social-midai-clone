@@ -21,15 +21,15 @@ interface Comment {
     text: string;
     createdAt: string;
     _id: string;
-  }
-  
-  interface User {
+}
+
+interface User {
     email: string;
     profilePicture: string;
     username: string;
-  }
-  
-  interface Post {
+}
+
+interface Post {
     _id: string;
     user: User;
     content: string;
@@ -43,7 +43,7 @@ interface Comment {
     likes: string[];
     comments: Comment[];
     share: string[];
-  }
+}
 
 // Props for PostCard
 interface PostCardProps {
