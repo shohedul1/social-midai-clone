@@ -18,15 +18,11 @@ interface Comment {
     _id: string;
 }
 
-
-
-
 interface PostCommentsProps {
     comments: Comment[];
     onComment: (comment: Comment) => void;
     commentInputRef: React.RefObject<HTMLInputElement>;
 }
-
 
 const PostComments: React.FC<PostCommentsProps> = ({ comments, onComment, commentInputRef }) => {
     const [showAllComments, setShowAllComments] = useState(false);
@@ -39,7 +35,9 @@ const PostComments: React.FC<PostCommentsProps> = ({ comments, onComment, commen
             const newComment: Comment = {
                 user: {
                     username: user?.username || "Anonymous",
-                    profilePicture: user?.profilePicture,
+                    profilePicture: user?.profilePicture || "",
+                    email: user?.email || "anonymous@example.com", // Default value for email
+
                 },
                 text: commentText,
                 createdAt: new Date().toISOString(),
@@ -57,7 +55,7 @@ const PostComments: React.FC<PostCommentsProps> = ({ comments, onComment, commen
         <div className="mt-4">
             <h3 className="font-semibold mb-2">Comments</h3>
             <div className="max-h-60 overflow-y-auto pr-2">
-                {visibleComments.map((comment: any, index) => (
+                {visibleComments.map((comment: Comment, index) => (
                     <div key={index} className="flex items-start space-x-2 mb-2">
                         <Avatar className="w-8 h-8">
                             {comment.user.profilePicture ? (
@@ -86,11 +84,7 @@ const PostComments: React.FC<PostCommentsProps> = ({ comments, onComment, commen
                         className="w-40 mt-2 text-blue-500 dark:text-gray-300 cursor-pointer"
                         onClick={() => setShowAllComments(!showAllComments)}
                     >
-                        {showAllComments ? (
-                            <>Show Less</>
-                        ) : (
-                            <>Show All Comments</>
-                        )}
+                        {showAllComments ? <>Show Less</> : <>Show All Comments</>}
                     </p>
                 )}
             </div>
