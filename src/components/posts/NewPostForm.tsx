@@ -1,3 +1,5 @@
+
+
 import { Card, CardContent } from "@/components/ui/card";
 import React, { useRef, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -19,7 +21,6 @@ import dynamic from "next/dynamic";
 import userStore from "../../../store/userStore";
 import { usePostStore } from "../../../store/usePostStore";
 import Image from "next/image";
-
 
 const Picker = dynamic(() => import("emoji-picker-react"), { ssr: false });
 
@@ -43,13 +44,9 @@ const NewPostForm: React.FC<NewPostFormProps> = ({ isPostFormOpen, setIsPostForm
     const [loading, setLoading] = useState(false);
     const { handleCreatePost } = usePostStore();
     const [showImageUpload, setShowImageUpload] = useState(false);
-
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-    const userPlaceholder = user?.username
-        ?.split(" ")
-        .map((name) => name[0])
-        .join("");
+    const userPlaceholder = user?.username?.split(" ").map((name) => name[0]).join("");
 
     const handleEmojiClick = (emojiObject: { emoji: string }) => {
         setPostContent((prev) => prev + emojiObject.emoji);
@@ -71,7 +68,7 @@ const NewPostForm: React.FC<NewPostFormProps> = ({ isPostFormOpen, setIsPostForm
                 content: postContent,
                 media: selectedFile || undefined,
             };
-            await handleCreatePost(formData); // Pass the new PostFormData
+            await handleCreatePost(formData);
             setPostContent("");
             setSelectedFile(null);
             setFilePreview(null);
@@ -82,8 +79,6 @@ const NewPostForm: React.FC<NewPostFormProps> = ({ isPostFormOpen, setIsPostForm
             setLoading(false);
         }
     };
-
-
 
     return (
         <Card>
@@ -100,6 +95,7 @@ const NewPostForm: React.FC<NewPostFormProps> = ({ isPostFormOpen, setIsPostForm
                     </Avatar>
 
                     <Dialog open={isPostFormOpen} onOpenChange={setIsPostFormOpen}>
+
                         <DialogTrigger className="w-full">
                             <Input
                                 placeholder={`What's on your mind, ${user?.username}?`}
@@ -108,20 +104,22 @@ const NewPostForm: React.FC<NewPostFormProps> = ({ isPostFormOpen, setIsPostForm
                             />
                             <Separator className="my-2 dark:bg-slate-400" />
                             <div className="flex justify-between">
-                                <Button variant="ghost" className="flex items-center justify-center">
+
+                                <div className="flex items-center justify-center hover:bg-gray-200 p-2 rounded-sm">
                                     <ImageIcon className="h-5 w-5 text-green-500 mr-2" />
                                     <span className="dark:text-slate-100">Photo</span>
-                                </Button>
-                                <Button variant="ghost" className="flex items-center justify-center">
+                                </div>
+                                <div className="flex items-center justify-center hover:bg-gray-200 p-2 rounded-sm">
                                     <Video className="h-5 w-5 text-red-500 mr-2" />
                                     <span className="dark:text-slate-100">Video</span>
-                                </Button>
-                                <Button variant="ghost" className="flex items-center justify-center">
+                                </div>
+                                <div className="flex items-center justify-center hover:bg-gray-200 p-2 rounded-sm">
                                     <Laugh className="h-5 w-5 text-orange-500 mr-2" />
                                     <span className="dark:text-slate-100">Feelings</span>
-                                </Button>
+                                </div>
                             </div>
                         </DialogTrigger>
+
                         <DialogContent className="sm:max-w-[525px] max-h-[80vh] overflow-y-auto">
                             <DialogHeader>
                                 <DialogTitle className="text-center">Create Post</DialogTitle>
@@ -253,4 +251,5 @@ const NewPostForm: React.FC<NewPostFormProps> = ({ isPostFormOpen, setIsPostForm
     );
 };
 
-export default NewPostForm;
+export default NewPostForm
+
