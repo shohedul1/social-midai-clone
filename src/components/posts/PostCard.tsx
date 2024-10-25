@@ -17,7 +17,7 @@ import PostComments from "./PostComments";
 import Image from "next/image";
 
 interface Comment {
-    user: string;
+    user: User;
     text: string;
     createdAt: string;
     _id: string;

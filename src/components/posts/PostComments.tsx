@@ -8,13 +8,17 @@ import userStore from "../../../store/userStore";
 
 // types.ts (or interfaces.ts)
 interface Comment {
-    user: string;
+    user: User;
     text: string;
     createdAt: string;
     _id: string;
 }
 
-
+interface User {
+    email: string;
+    profilePicture: string;
+    username: string;
+}
 
 
 
