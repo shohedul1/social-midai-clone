@@ -16,7 +16,6 @@ import {
 import PostComments from "./PostComments";
 import Image from "next/image";
 
-
 interface User {
     email: string;
     profilePicture: string;
@@ -24,7 +23,7 @@ interface User {
 }
 
 interface Comment {
-    user: string;
+    user: User;
     text: string;
     createdAt: string;
     _id: string;

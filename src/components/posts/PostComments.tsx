@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Send } from "lucide-react";
 import userStore from "../../../store/userStore";
 
-
 interface User {
     email: string;
     profilePicture: string;
@@ -13,27 +12,13 @@ interface User {
 }
 
 interface Comment {
-    user: string;
+    user: string[];
     text: string;
     createdAt: string;
     _id: string;
 }
 
-interface Post {
-    _id: string;
-    user: User;
-    content: string;
-    mediaUrl: string;
-    mediaType: 'image' | 'video';
-    likeCount: number;
-    commentCount: number;
-    shareCount: number;
-    createdAt: string;
-    updatedAt: string;
-    likes: string[];
-    comments: Comment[];
-    share: string[];
-}
+
 
 
 interface PostCommentsProps {
@@ -72,7 +57,7 @@ const PostComments: React.FC<PostCommentsProps> = ({ comments, onComment, commen
         <div className="mt-4">
             <h3 className="font-semibold mb-2">Comments</h3>
             <div className="max-h-60 overflow-y-auto pr-2">
-                {visibleComments.map((comment, index) => (
+                {visibleComments.map((comment: any, index) => (
                     <div key={index} className="flex items-start space-x-2 mb-2">
                         <Avatar className="w-8 h-8">
                             {comment.user.profilePicture ? (

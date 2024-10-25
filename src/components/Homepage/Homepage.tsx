@@ -14,7 +14,7 @@ interface User {
 }
 
 interface Comment {
-  user: string;
+  user: User;
   text: string;
   createdAt: string;
   _id: string;
