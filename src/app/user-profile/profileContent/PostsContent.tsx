@@ -1,3 +1,5 @@
+
+
 import React, { useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
@@ -39,16 +41,16 @@ interface Post {
     share: string[];
 }
 
-// Props for PostCard
+// Props for PostsContent
 interface PostsContentProps {
     post: Post;
     isLiked: boolean;
     onShare: () => void;
-    onComment: (comment: Comment) => void;
+    onComment: (comment: Comment) => void; // Pass in the comment function
     onLike: () => void;
 }
 
-const PostsContent: React.FC<PostsContentProps> = ({ post, isLiked, onShare, onLike,onComment }) => {
+const PostsContent: React.FC<PostsContentProps> = ({ post, isLiked, onShare, onLike, onComment }) => {
     const [showComments, setShowComments] = useState(false);
     const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
     const commentInputRef = useRef<HTMLInputElement | null>(null);
@@ -196,7 +198,7 @@ const PostsContent: React.FC<PostsContentProps> = ({ post, isLiked, onShare, onL
                             >
                                 <PostComments
                                     post={{ comments: post.comments }} // Ensure post.comments is passed correctly
-                                    onComment={onComment}
+                                    onComment={onComment} // Handle comment submission
                                     commentInputRef={commentInputRef}
                                 />
                             </motion.div>
@@ -209,4 +211,5 @@ const PostsContent: React.FC<PostsContentProps> = ({ post, isLiked, onShare, onL
 };
 
 export default PostsContent;
+
 
