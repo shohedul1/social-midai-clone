@@ -1,4 +1,3 @@
-"use client"
 import React, { useEffect, useState } from "react";
 import NewPostForm from "../posts/NewPostForm";
 import PostCard from "../posts/PostCard";
@@ -8,8 +7,34 @@ import LeftSideBar from "../LeftSideBar/LeftSideBar";
 import StorySection from "../story/StorySection";
 import RightSideBar from "../RightSideBar/RightSideBar";
 
+interface User {
+  email: string;
+  profilePicture: string;
+  username: string;
+}
 
+interface Comment {
+  user: string;
+  text: string;
+  createdAt: string;
+  _id: string;
+}
 
+interface Post {
+  _id: string;
+  user: User;
+  content: string;
+  mediaUrl: string;
+  mediaType: 'image' | 'video';
+  likeCount: number;
+  commentCount: number;
+  shareCount: number;
+  createdAt: string;
+  updatedAt: string;
+  likes: string[];
+  comments: Comment[];
+  share: string[];
+}
 
 const HomePage: React.FC = () => {
   const [isPostFormOpen, setIsPostFormOpen] = useState<boolean>(false);
@@ -60,7 +85,7 @@ const HomePage: React.FC = () => {
               setIsPostFormOpen={setIsPostFormOpen}
             />
             <div className="mt-6 space-y-6 mb-4">
-              {posts.map((post: any) => (
+              {posts.map((post: Post) => (
                 <PostCard
                   key={post._id}
                   post={post}

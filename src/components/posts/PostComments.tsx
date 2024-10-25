@@ -6,36 +6,34 @@ import { Send } from "lucide-react";
 import userStore from "../../../store/userStore";
 
 
-// types.ts (or interfaces.ts)
-interface Comment {
-    user: User;
-    text: string;
-    createdAt: string;
-    _id: string;
-}
-
 interface User {
     email: string;
     profilePicture: string;
     username: string;
 }
 
-export interface Post {
-    _id: string; // Unique identifier for the post
-    user: User; // User who created the post
-    content: string; // Content of the post
-    mediaUrl: string; // URL for any media associated with the post
-    mediaType: 'image' | 'video'; // Type of media
-    likeCount: number; // Number of likes
-    commentCount: number; // Number of comments
-    shareCount: number; // Number of shares
-    createdAt: string; // Creation date
-    updatedAt: string; // Last updated date
-    likes: string[]; // Array of user IDs who liked the post
-    comments: Comment[]; // Array of comments on the post
-    share: string[]; // Array of user IDs who shared the post
+interface Comment {
+    user: string;
+    text: string;
+    createdAt: string;
+    _id: string;
 }
 
+interface Post {
+    _id: string;
+    user: User;
+    content: string;
+    mediaUrl: string;
+    mediaType: 'image' | 'video';
+    likeCount: number;
+    commentCount: number;
+    shareCount: number;
+    createdAt: string;
+    updatedAt: string;
+    likes: string[];
+    comments: Comment[];
+    share: string[];
+}
 
 
 interface PostCommentsProps {
