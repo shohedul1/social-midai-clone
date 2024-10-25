@@ -58,7 +58,6 @@ type LoginData = yup.InferType<typeof loginSchema>;
 
 const Page = () => {
     const router = useRouter();
-    const [isLoading, setIsLoading] = useState(true);
 
     const {
         register: registerLogin,
@@ -88,8 +87,6 @@ const Page = () => {
         } catch (error) {
             console.error(error);
             toast.error('Email already exists');
-        } finally {
-            setIsLoading(false);
         }
     };
 
@@ -103,8 +100,6 @@ const Page = () => {
         } catch (error) {
             console.error(error);
             toast.error('Invalid email or password');
-        } finally {
-            setIsLoading(false);
         }
     };
 

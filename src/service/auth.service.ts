@@ -5,10 +5,16 @@ interface UserData {
     username: string;
     email: string;
     password: string;
-    gender: string;
-    dateOfBirth: string;
-    // Add any other fields as necessary
+    dateOfBirth: Date;
+    gender: NonNullable<"male" | "female" | "other" | undefined>;
+
 }
+
+interface LoginUser {
+    email: string;
+    password: string;
+}
+
 
 // Sign up user
 export const registerUser = async (userData: UserData) => {
@@ -21,7 +27,7 @@ export const registerUser = async (userData: UserData) => {
 }
 
 // Login user
-export const loginUser = async (userData: UserData) => {
+export const loginUser = async (userData: LoginUser) => {
     try {
         const response = await axiosInstance.post('/auth/login', userData);
         return response.data;

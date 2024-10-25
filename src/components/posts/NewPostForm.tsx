@@ -18,6 +18,7 @@ import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import userStore from "../../../store/userStore";
 import { usePostStore } from "../../../store/usePostStore";
+import Image from "next/image";
 
 
 const Picker = dynamic(() => import("emoji-picker-react"), { ssr: false });
@@ -167,7 +168,10 @@ const NewPostForm: React.FC<NewPostFormProps> = ({ isPostFormOpen, setIsPostForm
 
                                         {filePreview ? (
                                             fileType.startsWith("image") ? (
-                                                <img
+                                                <Image
+                                                    width={500}
+                                                    height={500}
+                                                    priority
                                                     src={filePreview}
                                                     alt="preview_img"
                                                     className="w-full h-auto max-h-[300px] object-cover"

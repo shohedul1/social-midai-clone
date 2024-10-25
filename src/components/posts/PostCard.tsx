@@ -14,6 +14,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import PostComments from "./PostComments";
+import Image from "next/image";
 
 // User Interface
 interface User {
@@ -133,7 +134,11 @@ const PostCard: React.FC<PostCardProps> = ({ post, isLiked, onShare, onComment, 
                     </div>
                     <p className="mb-4">{post.content}</p>
                     {post.mediaUrl && post.mediaType === "image" && (
-                        <img src={post.mediaUrl} alt="post_image" className="w-full h-auto rounded-lg mb-4" />
+                        <Image
+                            width={500}
+                            height={500}
+                            priority
+                            src={post.mediaUrl} alt="post_image" className="w-full h-auto rounded-lg mb-4" />
                     )}
                     {post.mediaUrl && post.mediaType === "video" && (
                         <video controls className="w-full h-[500px] rounded-lg mb-4">
