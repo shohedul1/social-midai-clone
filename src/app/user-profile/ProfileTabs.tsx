@@ -1,4 +1,5 @@
 'use client';
+'use client';
 import React, { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ProfileDetails from './ProfileDetails';
@@ -7,6 +8,31 @@ import ProfileDetails from './ProfileDetails';
 interface User {
     username: string;
     profilePicture?: string;
+}
+
+// Comment Interface
+interface Comment {
+    user: User;
+    text: string;
+    createdAt: string;
+    _id: string;
+}
+
+// Post Interface
+interface Post {
+    _id: string;
+    user: User;
+    content: string;
+    mediaUrl?: string; // mediaUrl could be optional
+    mediaType?: 'image' | 'video'; // mediaType could be optional
+    likeCount: number;
+    commentCount: number;
+    shareCount: number;
+    createdAt: string;
+    updatedAt: string;
+    likes: string[];
+    comments: Comment[];
+    share: string[];
 }
 
 // Define the Bio interface
@@ -27,19 +53,6 @@ interface ProfileData {
     email: string;
     dateOfBirth: string;
     followingCount: number;
-}
-
-// Define the Post interface
-interface Post {
-    _id: string;
-    user: User;
-    content: string;
-    mediaUrl?: string;
-    mediaType?: 'image' | 'video';
-    createdAt: string;
-    likeCount: number;
-    commentCount: number;
-    shareCount: number;
 }
 
 // Define the TabNames type
@@ -70,9 +83,13 @@ const mockUserPosts: Post[] = [
         mediaType: "image",
         mediaUrl: "https://via.placeholder.com/200",
         createdAt: "2023-10-01",
+        updatedAt: "2023-10-01", // Add updatedAt
         likeCount: 10,
         commentCount: 2,
         shareCount: 1,
+        likes: [], // Add empty array
+        comments: [], // Add empty array
+        share: [], // Add empty array
     },
     {
         _id: "2",
@@ -81,9 +98,13 @@ const mockUserPosts: Post[] = [
         mediaType: "image",
         mediaUrl: "https://via.placeholder.com/200",
         createdAt: "2023-10-02",
+        updatedAt: "2023-10-02", // Add updatedAt
         likeCount: 5,
         commentCount: 1,
         shareCount: 0,
+        likes: [], // Add empty array
+        comments: [], // Add empty array
+        share: [], // Add empty array
     },
 ];
 
