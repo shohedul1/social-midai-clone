@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useParams } from "next/navigation";
 import { fetchUserProfile } from "@/service/user.service";
 import ProfileHeader from "../ProfileHeader";
@@ -26,7 +26,7 @@ const Page: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [isOwner, setIsOwner] = useState<boolean>(false);
 
-    const fetchProfile = async () => {
+    const fetchProfile = useCallback(async () => {
         setLoading(true);
         try {
             const result: FetchUserProfileResult = await fetchUserProfile(id);
@@ -37,13 +37,13 @@ const Page: React.FC = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [id]); // Make sure to include 'id' in dependencies
 
     useEffect(() => {
         if (id) {
             fetchProfile();
         }
-    }, [id]);
+    }, [id, fetchProfile]); // Add fetchProfile to dependencies
 
     if (loading) {
         return <div>Loading...</div>;

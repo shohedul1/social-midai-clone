@@ -14,7 +14,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { updateUserCoverPhoto, updateUserProfile } from "@/service/user.service";
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import userStore from "../../../store/userStore";
 import Image from "next/image";
 
@@ -37,6 +37,13 @@ interface ProfileHeaderProps {
     fetchProfile: () => Promise<void>;
 }
 
+// Define the type for form data
+interface ProfileFormData {
+    username: string;
+    dateOfBirth?: string;
+    gender?: string;
+}
+
 const ProfileHeader: React.FC<ProfileHeaderProps> = ({
     id,
     profileData,
@@ -53,7 +60,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
     const [loading, setLoading] = useState<boolean>(false);
     const { setUser } = userStore();
 
-    const { register, handleSubmit, setValue } = useForm({
+    const { register, handleSubmit, setValue } = useForm<ProfileFormData>({
         defaultValues: {
             username: profileData?.username,
             dateOfBirth: profileData?.dateOfBirth?.split("T")[0],
@@ -64,13 +71,13 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
     const profileImageInputRef = useRef<HTMLInputElement>(null);
     const coverImageInputRef = useRef<HTMLInputElement>(null);
 
-    const onSubmitProfile = async (data: any) => {
+    const onSubmitProfile: SubmitHandler<ProfileFormData> = async (data) => {
         try {
             setLoading(true);
             const formData = new FormData();
             formData.append("username", data.username);
-            formData.append("dateOfBirth", data.dateOfBirth);
-            formData.append("gender", data.gender);
+            formData.append("dateOfBirth", data.dateOfBirth || "");
+            formData.append("gender", data.gender || "");
 
             if (profilePictureFile) {
                 formData.append("profilePicture", profilePictureFile);
