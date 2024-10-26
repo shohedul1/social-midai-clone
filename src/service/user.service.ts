@@ -103,7 +103,16 @@ export const updateUserCoverPhoto = async (userId: string, updateData: FormData)
 };
 
 // Create or update user bio
-export const createOrUpdateUserBio = async (userId: string, bioData: string) => {
+interface BioData {
+    bioText?: string;
+    liveIn?: string;
+    relationship?: string;
+    hometown?: string;
+    workplace?: string;
+    education?: string;
+    phone?: string;
+}
+export const createOrUpdateUserBio = async (userId: string, bioData:BioData ) => {
     try {
         const response = await axiosInstance.put(`/users/bio/${userId}`, { bio: bioData });
         return response?.data?.data;
