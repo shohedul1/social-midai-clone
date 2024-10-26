@@ -26,14 +26,14 @@ interface ProfileData {
     coverPhoto?: string;
     profilePicture?: string;
     followerCount?: number;
-    email: string; // Ensure email is included
+    email: string;
 }
 
 interface ProfileHeaderProps {
     id: string;
     profileData: ProfileData;
     isOwner: boolean;
-    setProfileData: React.Dispatch<React.SetStateAction<ProfileData | null>>; // Allow null here
+    setProfileData: React.Dispatch<React.SetStateAction<ProfileData | null>>;
     fetchProfile: () => Promise<void>;
 }
 
@@ -135,7 +135,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
 
     return (
         <div className="relative">
-            <div className="relative h-64 md:h-80 bg-gray-300 overflow-hidden ">
+            <div className="relative h-64 md:h-80 bg-gray-300 overflow-hidden">
                 <Image
                     width={500}
                     height={500}
@@ -158,17 +158,14 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
             </div>
             {/* profile section */}
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 relative z-10">
-                <div className="flex flex-col md:flex-row items-center md:items-end md:space-x-5 ">
+                <div className="flex flex-col md:flex-row items-center md:items-end md:space-x-5">
                     <Avatar className="w-32 h-32 border-4 border-white dark:border-gray-700">
                         <AvatarImage
-                            src={profileData?.profilePicture}
+                            src={profileData?.profilePicture || '/path/to/default-avatar.jpg'}
                             alt={profileData.username}
                         />
                         <AvatarFallback className="dark:bg-gray-400">
-                            {profileData?.username
-                                ?.split(" ")
-                                .map((name) => name[0])
-                                .join("")}
+                            {profileData?.username?.split(" ").map((name) => name[0]).join("")}
                         </AvatarFallback>
                     </Avatar>
                     <div className="mt-4 md:mt-0 text-center md:text-left flex-grow">
@@ -189,7 +186,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                 </div>
             </div>
 
-            {/* edit profile model */}
+            {/* Edit Profile Modal */}
             <AnimatePresence>
                 {isEditProfileModel && (
                     <motion.div
@@ -220,14 +217,11 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                                 <div className="flex flex-col items-center mb-4">
                                     <Avatar className="w-24 h-24 border-4 border-white dark:border-gray-700 mb-2">
                                         <AvatarImage
-                                            src={profilePicturePreview || profileData?.profilePicture}
+                                            src={profilePicturePreview || profileData?.profilePicture || '/path/to/default-avatar.jpg'}
                                             alt={profileData?.username}
                                         />
                                         <AvatarFallback className="dark:bg-gray-400">
-                                            {profileData?.username
-                                                ?.split(" ")
-                                                .map((name) => name[0])
-                                                .join("")}
+                                            {profileData?.username?.split(" ").map((name) => name[0]).join("")}
                                         </AvatarFallback>
                                     </Avatar>
                                     <input
@@ -255,7 +249,6 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                                     <Label htmlFor="dateOfBirth">Date of Birth</Label>
                                     <Input id="dateOfBirth" type="date" {...register("dateOfBirth")} />
                                 </div>
-
                                 <div>
                                     <Label htmlFor="gender">Gender</Label>
                                     <Select onValueChange={(value) => setValue("gender", value)} defaultValue={profileData?.gender}>
@@ -281,7 +274,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                 )}
             </AnimatePresence>
 
-            {/* edit cover model */}
+            {/* Edit Cover Modal */}
             <AnimatePresence>
                 {isEditCoverModel && (
                     <motion.div
@@ -308,7 +301,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                                     <X className="w-4 h-4" />
                                 </Button>
                             </div>
-                            <form className="space-y-4">
+                            <form className="space-y-4" onSubmit={onSubmitCoverPhoto}>
                                 <div className="flex flex-col items-center mb-4">
                                     {coverPhotoPreview && (
                                         <Image
@@ -337,12 +330,10 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                                         Select New Cover Photo
                                     </Button>
                                 </div>
-
                                 <Button
                                     className="w-full bg-blue-600 hover:bg-blue-400 text-white"
-                                    onClick={onSubmitCoverPhoto}
                                     disabled={!coverPhotoFile}
-                                    type="button"
+                                    type="submit"
                                 >
                                     <Save className="w-4 h-4 mr-2" /> {loading ? "Saving..." : "Save Cover Photo"}
                                 </Button>
