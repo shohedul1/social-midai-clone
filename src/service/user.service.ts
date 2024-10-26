@@ -77,8 +77,10 @@ export const getMutualFriends = async () => {
 }
 
 
-
-export const updateUserProfile = async (userId: string, updateData: string[]) => {
+interface UpdateData {
+    profilePicture: File
+}
+export const updateUserProfile = async (userId: string, updateData: UpdateData) => {
     try {
         const response = await axiosInstance.put(`/users/profile/${userId}`, updateData)
         return response?.data?.data;
@@ -88,8 +90,11 @@ export const updateUserProfile = async (userId: string, updateData: string[]) =>
     }
 }
 
+interface UpdateData {
+    coverPhoto: File
+}
 
-export const updateUserCoverPhoto = async (userId: string, updateData: string[]) => {
+export const updateUserCoverPhoto = async (userId: string, updateData: UpdateData) => {
     try {
         const response = await axiosInstance.put(`/users/profile/cover-photo/${userId}`, updateData)
         return response?.data?.data;
@@ -99,8 +104,17 @@ export const updateUserCoverPhoto = async (userId: string, updateData: string[])
     }
 }
 
+interface BioData {
+    bioText?: string;
+    liveIn?: string;
+    relationship?: string;
+    hometown?: string;
+    workplace?: string;
+    education?: string;
+    phone?: string;
+}
 
-export const createOrUpdateUserBio = async (userId: string, bioData: string[]) => {
+export const createOrUpdateUserBio = async (userId: string, bioData: BioData) => {
     try {
         const response = await axiosInstance.put(`/users/bio/${userId}`, bioData)
         return response?.data?.data;
