@@ -229,7 +229,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ post, isLiked, onShare, onComment
                             transition={{ duration: 0.3 }}
                         >
                             <ScrollArea className="h-[300px] w-full rounded-md border p-4">
-                                <VideoComments key={post?.comments?._id} comments={post?.comments} />
+                                <VideoComments  comments={post?.comments} />
                             </ScrollArea>
                             <div className="flex items-center mt-4 p-2">
                                 <Avatar className="h-10 w-10 rounded mr-3">
