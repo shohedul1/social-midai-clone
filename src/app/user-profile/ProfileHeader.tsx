@@ -304,7 +304,10 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                             <form className="space-y-4">
                                 <div className="flex flex-col items-center mb-4">
                                     {coverPhotoPreview && (
-                                        <img
+                                        <Image
+                                            width={500}
+                                            height={500}
+                                            priority
                                             src={coverPhotoPreview}
                                             alt="cover-photo"
                                             className="w-full h-40 object-cover rounded-lg mb-4"
