@@ -20,7 +20,7 @@ interface ProfileData {
         education?: string;
         phone?: string;
     };
-    followingCount?: number; // Assuming following count is part of profile data
+    followingCount?: number;// Assuming following count is part of profile data
 }
 
 interface ProfileTabsProps {

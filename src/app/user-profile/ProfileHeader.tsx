@@ -22,11 +22,22 @@ import Image from "next/image";
 // Define types for the profile data and props
 interface ProfileData {
     username: string;
-    dateOfBirth?: string;
+    dateOfBirth?: string | Date;
     gender?: string;
-    profilePicture?: string;
     coverPhoto?: string;
+    profilePicture?: string;
     followerCount?: number;
+    email: string; // Ensure email is included
+    bio?: {
+        bioText?: string;
+        liveIn?: string;
+        relationship?: string;
+        hometown?: string;
+        workplace?: string;
+        education?: string;
+        phone?: string;
+    };
+    followingCount?: number;
 }
 
 

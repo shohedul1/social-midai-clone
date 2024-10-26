@@ -8,11 +8,22 @@ import ProfileTabs from "../ProfileTabs";
 // Define the structure of the profile data
 interface ProfileData {
     username: string;
-    dateOfBirth?: string;
+    dateOfBirth?: string | Date;
     gender?: string;
-    profilePicture?: string;
     coverPhoto?: string;
+    profilePicture?: string;
     followerCount?: number;
+    email: string; // Ensure email is included
+    bio?: {
+        bioText?: string;
+        liveIn?: string;
+        relationship?: string;
+        hometown?: string;
+        workplace?: string;
+        education?: string;
+        phone?: string;
+    };
+    followingCount?: number;
 }
 
 // Define the structure of the result from fetchUserProfile
