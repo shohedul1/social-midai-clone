@@ -42,6 +42,8 @@ const Page = () => {
     }
   };
 
+  console.log('followUser', followUser)
+
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-[rgb(36,37,38)]">
       <LeftSideBar />
