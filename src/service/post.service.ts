@@ -7,9 +7,6 @@ interface FormData {
 }
 
 
-
-
-
 export const createPost = async (postData: FormData) => {
     try {
         const formData = new FormData(); // Create an instance of the built-in FormData
