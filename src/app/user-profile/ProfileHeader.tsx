@@ -14,9 +14,10 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { updateUserCoverPhoto, updateUserProfile,  } from "@/service/user.service";
+import { updateUserCoverPhoto, updateUserProfile, } from "@/service/user.service";
 import { useForm } from "react-hook-form";
 import userStore from "../../../store/userStore";
+import Image from "next/image";
 
 // Define types for the profile data and props
 interface ProfileData {
@@ -28,11 +29,12 @@ interface ProfileData {
     followerCount?: number;
 }
 
+
 interface ProfileHeaderProps {
     id: string;
     profileData: ProfileData;
     isOwner: boolean;
-    setProfileData: (data: ProfileData) => void;
+    setProfileData: (data: ProfileData | null) => void; // Ensure null is allowed
     fetchProfile: () => Promise<void>;
 }
 
@@ -128,7 +130,10 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
     return (
         <div className="relative">
             <div className="relative h-64 md:h-80 bg-gray-300 overflow-hidden ">
-                <img
+                <Image
+                    width={500}
+                    height={500}
+                    priority
                     src={profileData?.coverPhoto || ""}
                     alt="cover"
                     className="w-full h-full object-cover"
@@ -288,7 +293,10 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                             <form className="space-y-4" onSubmit={onSubmitCoverPhoto}>
                                 <div className="flex flex-col items-center mb-4">
                                     {coverPhotoPreview && (
-                                        <img
+                                        <Image
+                                            width={500}
+                                            height={500}
+                                            priority
                                             src={coverPhotoPreview}
                                             alt="cover-photo"
                                             className="w-full h-40 object-cover rounded-lg mb-4"

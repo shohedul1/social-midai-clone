@@ -34,7 +34,7 @@ export const followUser = async (userId: string) => {
 };
 
 // Unfollow a user
-export const unfollowUser = async (userId: string) => {
+export const UnfollowUser = async (userId: string) => {
     try {
         const response = await axiosInstance.post('/users/unfollow', { userIdToUnFollow: userId });
         return response?.data;

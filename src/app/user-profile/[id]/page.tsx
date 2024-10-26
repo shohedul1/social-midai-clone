@@ -8,9 +8,11 @@ import ProfileTabs from "../ProfileTabs";
 // Define the structure of the profile data
 interface ProfileData {
     username: string;
-    email: string;
+    dateOfBirth?: string;
+    gender?: string;
     profilePicture?: string;
-    // Add any other relevant fields
+    coverPhoto?: string;
+    followerCount?: number;
 }
 
 // Define the structure of the result from fetchUserProfile
@@ -37,13 +39,13 @@ const Page: React.FC = () => {
         } finally {
             setLoading(false);
         }
-    }, [id]); // Make sure to include 'id' in dependencies
+    }, [id]);
 
     useEffect(() => {
         if (id) {
             fetchProfile();
         }
-    }, [id, fetchProfile]); // Add fetchProfile to dependencies
+    }, [id, fetchProfile]);
 
     if (loading) {
         return <div>Loading...</div>;
@@ -57,7 +59,7 @@ const Page: React.FC = () => {
         <div>
             <ProfileHeader
                 profileData={profileData}
-                setProfileData={setProfileData}
+                setProfileData={setProfileData} // This should now match
                 isOwner={isOwner}
                 id={id}
                 fetchProfile={fetchProfile}
