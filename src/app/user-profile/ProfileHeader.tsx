@@ -65,13 +65,17 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
     const [loading, setLoading] = useState(false);
     const { setUser } = userStore();
 
+
     const { register, handleSubmit, setValue } = useForm<ProfileData>({
         defaultValues: {
             username: profileData?.username,
-            dateOfBirth: profileData?.dateOfBirth?.split("T")[0],
+            dateOfBirth: typeof profileData?.dateOfBirth === 'string'
+                ? profileData.dateOfBirth.split("T")[0]
+                : undefined, // Set to undefined if not a string
             gender: profileData?.gender,
         },
     });
+
 
     const profileImageInputRef = useRef<HTMLInputElement>(null);
     const coverImageInputRef = useRef<HTMLInputElement>(null);
@@ -80,8 +84,19 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         try {
             setLoading(true);
             const formData = new FormData();
+
             formData.append("username", data.username);
-            formData.append("dateOfBirth", data.dateOfBirth || "");
+
+            // Handle dateOfBirth conversion
+            if (data.dateOfBirth) {
+                const dateOfBirthString = typeof data.dateOfBirth === 'string'
+                    ? data.dateOfBirth
+                    : data.dateOfBirth instanceof Date
+                        ? data.dateOfBirth.toISOString() // Convert Date to string
+                        : ""; // or handle as you see fit
+                formData.append("dateOfBirth", dateOfBirthString);
+            }
+
             formData.append("gender", data.gender || "");
 
             if (profilePictureFile) {
@@ -100,6 +115,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
             setLoading(false);
         }
     };
+
 
     const handleProfilePictureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
