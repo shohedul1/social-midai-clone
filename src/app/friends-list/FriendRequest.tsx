@@ -5,20 +5,21 @@ import { motion } from "framer-motion";
 import { UserMinus, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-
-
-interface Friend {
-    id: number; // or string, depending on your data structure
-    name: string; // friend's name
-    profilePicture?: string; // optional property for profile picture URL
-}
 interface FriendRequestProps {
-    friend: Friend;
-    onConfirm: (friendId: number) => void;
-    onDelete: (friendId: number) => void;
+    friend: {
+        _id: string;
+        username: string;
+        profilePicture?: string;
+    };
+    onAction: (action: string, userId: string) => Promise<void>;
 }
 
-const FriendRequest: React.FC<FriendRequestProps> = ({ friend, onConfirm, onDelete }) => {
+const FriendRequest: React.FC<FriendRequestProps> = ({ friend, onAction }) => {
+    const userPlaceholder = friend?.username
+        ?.split(" ")
+        .map((name) => name[0])
+        .join("");
+
     return (
         <AnimatePresence>
             <motion.div
@@ -28,16 +29,28 @@ const FriendRequest: React.FC<FriendRequestProps> = ({ friend, onConfirm, onDele
                 className="bg-white mb-4 dark:bg-gray-800 p-4 shadow rounded-lg"
             >
                 <Avatar className="h-32 w-32 rounded mx-auto mb-4">
-                    <AvatarImage src={friend.profilePicture} alt={friend.name} />
-                    <AvatarFallback>{friend.name.charAt(0)}</AvatarFallback>
+                    {friend?.profilePicture ? (
+                        <AvatarImage src={friend?.profilePicture} alt={friend?.username} />
+                    ) : (
+                        <AvatarFallback className="dark:bg-gray-400">
+                            {userPlaceholder}
+                        </AvatarFallback>
+                    )}
                 </Avatar>
-                <h3 className="text-lg font-semibold text-center mb-4">{friend.name}</h3>
-
+                <h3 className="text-lg font-semibold text-center mb-4">{friend?.username}</h3>
                 <div className="flex flex-col justify-between">
-                    <Button className="bg-blue-500" size="lg" onClick={() => onConfirm(friend.id)}>
+                    <Button
+                        className="bg-blue-500"
+                        size="lg"
+                        onClick={() => onAction("confirm", friend._id)}
+                    >
                         <UserPlus className="mr-2 h-4 w-4" /> Confirm
                     </Button>
-                    <Button className="mt-2" size="lg" onClick={() => onDelete(friend.id)}>
+                    <Button
+                        className="mt-2"
+                        size="lg"
+                        onClick={() => onAction("delete", friend._id)}
+                    >
                         <UserMinus className="mr-2 h-4 w-4" /> Delete
                     </Button>
                 </div>

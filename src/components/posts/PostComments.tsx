@@ -62,7 +62,10 @@ const PostComments: React.FC<PostCommentsProps> = ({ comments, onComment, commen
                                 <AvatarImage src={comment.user.profilePicture} alt={comment.user.username} />
                             ) : (
                                 <AvatarFallback className="dark:bg-gray-400">
-                                    {comment.user.username.charAt(0)}
+                                    {comment?.user?.username
+                                        ?.split(" ")
+                                        .map((name) => name[0])
+                                        .join(" ")}
                                 </AvatarFallback>
                             )}
                         </Avatar>

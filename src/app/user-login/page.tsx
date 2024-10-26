@@ -37,7 +37,7 @@ const registerSchema = yup.object().shape({
     dateOfBirth: yup.date().required("Birth date is required"),
     gender: yup
         .string()
-        .oneOf(["male", "female", "other"], "please select a gender")
+        .oneOf(["male", "female", "other"], "Please select a gender")
         .required("Gender is required"),
 });
 
@@ -210,7 +210,7 @@ const Page = () => {
                                         <div className="space-y-2">
                                             <Label htmlFor="signupPassword">Password</Label>
                                             <Input
-                                                id="signPassword"
+                                                id="signupPassword"
                                                 type="password"
                                                 {...registerSignUp("password")}
                                                 placeholder="Enter your Password"
@@ -238,21 +238,17 @@ const Page = () => {
                                         </div>
                                         <div className="space-y-2">
                                             <Label>Gender</Label>
-                                            <RadioGroup
-                                                className="flex justify-between "
-                                                defaultValue="male"
-                                                {...registerSignUp("gender")}
-                                            >
+                                            <RadioGroup>
                                                 <div className="flex items-center space-x-2">
-                                                    <RadioGroupItem value="male" id="male" />
+                                                    <RadioGroupItem value="male" id="male" {...registerSignUp("gender")} />
                                                     <Label htmlFor="male">Male</Label>
                                                 </div>
                                                 <div className="flex items-center space-x-2">
-                                                    <RadioGroupItem value="female" id="female" />
+                                                    <RadioGroupItem value="female" id="female" {...registerSignUp("gender")} />
                                                     <Label htmlFor="female">Female</Label>
                                                 </div>
                                                 <div className="flex items-center space-x-2">
-                                                    <RadioGroupItem value="other" id="other" />
+                                                    <RadioGroupItem value="other" id="other" {...registerSignUp("gender")} />
                                                     <Label htmlFor="other">Other</Label>
                                                 </div>
                                             </RadioGroup>

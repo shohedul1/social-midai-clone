@@ -1,10 +1,9 @@
-'use client';
-
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import React, { useEffect, useRef, useState, useMemo } from 'react';
-import StoryCard from './StoryCard';
+import React, { useEffect, useRef, useState } from "react";
+import StoryCard from "./StoryCard";
 import { motion } from "framer-motion";
-import { Button } from '@/components/ui/button';
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { usePostStore } from "../../../store/usePostStore";
 
 interface User {
     username: string;
@@ -22,27 +21,11 @@ const StorySection: React.FC = () => {
     const [scrollPosition, setScrollPosition] = useState(0);
     const [maxScroll, setMaxScroll] = useState(0);
     const containerRef = useRef<HTMLDivElement | null>(null);
-    
-    const stories: Story[] = useMemo(() => [
-        {
-            _id: 1,
-            mediaUrl: "https://res.cloudinary.com/djhjt07rh/image/upload/v1728852781/knjy8hjnl01gzfy1xap2.jpg",
-            mediaType: "image",
-            user: { username: "shohidul" }
-        },
-        {
-            _id: 2,
-            mediaUrl: "https://res.cloudinary.com/djhjt07rh/video/upload/v1729445069/Forsage_busd_plan_in_english_by_owner_mr.lado____forsage_BUSD_English_plan_presentation_720P_HD_cylmai.mp4",
-            mediaType: "video",
-            user: { username: "shohidul" }
-        },
-        {
-            _id: 3,
-            mediaUrl: "https://res.cloudinary.com/djhjt07rh/video/upload/v1729445069/Forsage_busd_plan_in_english_by_owner_mr.lado____forsage_BUSD_English_plan_presentation_720P_HD_cylmai.mp4",
-            mediaType: "video",
-            user: { username: "shohidul" }
-        }
-    ], []);
+    const { story, fetchStoryPost } = usePostStore();
+
+    useEffect(() => {
+        fetchStoryPost();
+    }, [fetchStoryPost]);
 
     useEffect(() => {
         const container = containerRef.current;
@@ -55,12 +38,12 @@ const StorySection: React.FC = () => {
             window.addEventListener("resize", updateMaxScroll);
             return () => window.removeEventListener("resize", updateMaxScroll);
         }
-    }, [stories]); // This can also be updated to avoid `stories` as a dependency
+    }, [story]);
 
-    const scroll = (direction: 'left' | 'right') => {
+    const scroll = (direction: "left" | "right") => {
         const container = containerRef.current;
         if (container) {
-            const scrollAmount = direction === "left" ? -200 : 200; // Adjust as needed
+            const scrollAmount = direction === "left" ? -200 : 200;
             container.scrollBy({ left: scrollAmount, behavior: "smooth" });
         }
     };
@@ -85,16 +68,16 @@ const StorySection: React.FC = () => {
                     drag="x"
                     dragConstraints={{
                         right: 0,
-                        left: -((stories.length + 1) * 200) + (containerRef.current?.offsetWidth || 0),
+                        left: -((story.length + 1) * 200) + (containerRef.current?.offsetWidth || 0),
                     }}
                 >
                     <StoryCard isAddStory={true} />
-                    {stories.map(story => (
-                        <StoryCard story={story} isAddStory={false} key={story._id} />
+                    {story?.map((storyItem: Story) => (
+                        <StoryCard story={storyItem} key={storyItem._id} />
                     ))}
                 </motion.div>
 
-                {/* Left scroll button */}
+                {/* Left side scroll button */}
                 {scrollPosition > 0 && (
                     <Button
                         variant="outline"
@@ -106,7 +89,7 @@ const StorySection: React.FC = () => {
                     </Button>
                 )}
 
-                {/* Right scroll button */}
+                {/* Right side scroll button */}
                 {scrollPosition < maxScroll && (
                     <Button
                         variant="outline"

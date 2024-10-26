@@ -1,43 +1,45 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import { FriendCardSkeleton, NoFriendsMessage } from '@/lib/Skeleten';
-import FriendRequest from './FriendRequest';
-import FriendsSuggestion from './FriendsSuggestion';
-import LeftSideBar from '@/components/LeftSideBar/LeftSideBar';
-
-interface Friend {
-  id: number;
-  name: string;
-  profilePicture?: string;
-}
+import React, { useEffect } from "react";
+import FriendRequest from "./FriendRequest";
+import FriendsSuggestion from "./FriendsSuggestion";
+import toast from "react-hot-toast";
+import { userFriendStore } from "../../../store/userFriendsStore";
+import LeftSideBar from "@/components/LeftSideBar/LeftSideBar";
+import { FriendCardSkeleton, NoFriendsMessage } from "@/lib/Skeleten";
+import { deleteUserFromRequest } from "@/service/user.service";
 
 const Page = () => {
-  const [loading, setLoading] = useState(true);
-
-  // Mock data for friend requests and suggestions
-  const friendRequest: Friend[] = [{ id: 1, name: "John Doe", profilePicture: "" }];
-  const friendSuggestion: Friend[] = [{ id: 2, name: "Jane Doe", profilePicture: "" }];
+  const {
+    followUser,
+    loading,
+    UnfollowUser,
+    fetchFriendRequest,
+    fetchFriendSuggestion,
+    friendRequest,
+    friendSuggestion,
+  } = userFriendStore();
 
   useEffect(() => {
-    // Simulate loading data
-    const timer = setTimeout(() => {
-      setLoading(false); // Set loading to false after 2 seconds
-    }, 2000);
-    
-    return () => clearTimeout(timer); // Cleanup timeout on unmount
-  }, []);
+    fetchFriendRequest();
+    fetchFriendSuggestion();
+  }, [fetchFriendRequest, fetchFriendSuggestion]);
 
-  const handleConfirm = (id: number) => {
-    console.log(`Confirmed friend request for id: ${id}`);
-  };
 
-  const handleDelete = (id: number) => {
-    console.log(`Deleted friend request for id: ${id}`);
-  };
+  const handleAction = async (action: string, userId: string) => {
+    if (action === "confirm") {
+      await followUser(userId);
+      toast.success("Friend added successfully");
+      fetchFriendRequest();
+      fetchFriendSuggestion();
+    } else if (action === "delete") {
+      await deleteUserFromRequest(userId);
+      await UnfollowUser(userId);
+      fetchFriendRequest();
+      fetchFriendSuggestion()
+      toast.success("Friend delete successfully");
 
-  const handleAddFriend = (id: number) => {
-    console.log(`Added friend with id: ${id}`);
+    }
   };
 
   return (
@@ -56,10 +58,9 @@ const Page = () => {
           ) : (
             friendRequest.map((friend) => (
               <FriendRequest
-                key={friend.id}
+                key={friend._id}
                 friend={friend}
-                onConfirm={handleConfirm}
-                onDelete={handleDelete}
+                onAction={handleAction}
               />
             ))
           )}
@@ -77,9 +78,9 @@ const Page = () => {
           ) : (
             friendSuggestion.map((friend) => (
               <FriendsSuggestion
-                key={friend.id}
+                key={friend._id}
                 friend={friend}
-                onAction={handleAddFriend}
+                onAction={handleAction}
               />
             ))
           )}

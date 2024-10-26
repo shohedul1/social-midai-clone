@@ -1,22 +1,25 @@
-
 import { AnimatePresence } from "framer-motion";
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { motion } from "framer-motion";
-import { UserPlus } from "lucide-react"; // Removed UserMinus since it's not used
+import { UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-interface Friend {
-    id: number; // or string, depending on your data structure
-    name: string; // friend's name
-    profilePicture?: string; // optional property for profile picture URL
-}
 interface FriendsSuggestionProps {
-    friend: Friend; // Use the Friend type
-    onAction: (friendId: number) => void; // Function to handle actions
+    friend: {
+        _id: string;
+        username: string;
+        profilePicture?: string;
+    };
+    onAction: (action: string, userId: string) => Promise<void>;
 }
 
 const FriendsSuggestion: React.FC<FriendsSuggestionProps> = ({ friend, onAction }) => {
+    const userPlaceholder = friend?.username
+        ?.split(" ")
+        .map((name) => name[0])
+        .join("");
+
     return (
         <AnimatePresence>
             <motion.div
@@ -26,15 +29,19 @@ const FriendsSuggestion: React.FC<FriendsSuggestionProps> = ({ friend, onAction 
                 className="bg-white mb-4 dark:bg-gray-800 p-4 shadow rounded-lg"
             >
                 <Avatar className="h-32 w-32 rounded mx-auto mb-4">
-                    {friend.profilePicture ? (
-                        <AvatarImage src={friend.profilePicture} alt={friend.name} />
+                    {friend?.profilePicture ? (
+                        <AvatarImage src={friend?.profilePicture} alt={friend?.username} />
                     ) : (
-                        <AvatarFallback>{friend.name.charAt(0)}</AvatarFallback>
+                        <AvatarFallback>{userPlaceholder}</AvatarFallback>
                     )}
                 </Avatar>
-                <h3 className="text-lg font-semibold text-center mb-4">{friend.name}</h3>
+                <h3 className="text-lg font-semibold text-center mb-4">{friend?.username}</h3>
                 <div className="flex flex-col justify-between">
-                    <Button className="bg-blue-500" size="lg" onClick={() => onAction(friend.id)}>
+                    <Button
+                        className="bg-blue-500"
+                        size="lg"
+                        onClick={() => onAction("confirm", friend._id)}
+                    >
                         <UserPlus className="mr-2 h-4 w-4" /> Add Friend
                     </Button>
                 </div>
