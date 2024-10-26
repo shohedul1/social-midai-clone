@@ -21,6 +21,7 @@ import { formatDateInDDMMYYYY } from "@/lib/utils";
 import PostsContent from "./profileContent/PostsContent";
 import MutualFriends from "./profileContent/MutualFriends";
 import EditBio from "./profileContent/EditBio";
+import Image from "next/image";
 
 // Define types for the props
 interface ProfileDetailsProps {
@@ -232,7 +233,10 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({
                             {userPosts
                                 ?.filter(post => post?.mediaType === "image" && post?.mediaUrl)
                                 .map(post => (
-                                    <img
+                                    <Image
+                                        width={500}
+                                        height={500}
+                                        property=""
                                         key={post?._id}
                                         src={post?.mediaUrl}
                                         alt="user_all_photos"

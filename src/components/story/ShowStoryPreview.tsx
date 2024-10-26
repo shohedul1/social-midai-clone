@@ -3,6 +3,7 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { AvatarFallback } from "@radix-ui/react-avatar";
 import { X } from "lucide-react";
+import Image from "next/image";
 import React from "react";
 
 interface ShowStoryPreviewProps {
@@ -52,7 +53,10 @@ const ShowStoryPreview: React.FC<ShowStoryPreviewProps> = ({
         </div>
         <div className="flex-grow flex items-center justify-center bg-gray-100 dark:bg-gray-900">
           {fileType === "image" ? (
-            <img
+            <Image
+              width={500}
+              height={500}
+              priority
               src={file || ""}
               alt="story_preview"
               className="max-w-full max-h-full object-contain"
@@ -61,7 +65,7 @@ const ShowStoryPreview: React.FC<ShowStoryPreviewProps> = ({
             <video
               src={file || ""}
               controls
-              autoPlay
+              // autoPlay
               className="max-w-full max-h-full object-contain"
             />
           )}

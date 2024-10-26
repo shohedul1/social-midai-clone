@@ -26,30 +26,15 @@ import toast from "react-hot-toast";
 // Define your schemas first
 const registerSchema = yup.object().shape({
     username: yup.string().required("Name is required"),
-    email: yup
-        .string()
-        .email("Invalid email format")
-        .required("Email is required"),
-    password: yup
-        .string()
-        .min(6, "Password must be at least 6 characters")
-        .required("Password is required"),
+    email: yup.string().email("Invalid email format").required("Email is required"),
+    password: yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
     dateOfBirth: yup.date().required("Birth date is required"),
-    gender: yup
-        .string()
-        .oneOf(["male", "female", "other"], "Please select a gender")
-        .required("Gender is required"),
+    gender: yup.string().oneOf(["male", "female", "other"], "Please select a gender").required("Gender is required"),
 });
 
 const loginSchema = yup.object().shape({
-    email: yup
-        .string()
-        .email("Invalid email format")
-        .required("Email is required"),
-    password: yup
-        .string()
-        .min(6, "Password must be at least 6 characters")
-        .required("Password is required"),
+    email: yup.string().email("Invalid email format").required("Email is required"),
+    password: yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
 });
 
 // Define types based on schemas
@@ -73,6 +58,8 @@ const Page = () => {
         handleSubmit: handleSubmitSignUp,
         reset: resetSignUpForm,
         formState: { errors: errorsSignUp },
+        watch,
+        setValue,
     } = useForm<RegisterData>({
         resolver: yupResolver(registerSchema),
     });
@@ -148,9 +135,7 @@ const Page = () => {
                                                 className="col-span-3 dark:border-gray-400"
                                             />
                                             {errorsLogin.email && (
-                                                <p className="text-red-500">
-                                                    {errorsLogin.email.message}
-                                                </p>
+                                                <p className="text-red-500">{errorsLogin.email.message}</p>
                                             )}
                                         </div>
                                         <div className="space-y-2">
@@ -163,9 +148,7 @@ const Page = () => {
                                                 className="col-span-3 dark:border-gray-400"
                                             />
                                             {errorsLogin.password && (
-                                                <p className="text-red-500">
-                                                    {errorsLogin.password.message}
-                                                </p>
+                                                <p className="text-red-500">{errorsLogin.password.message}</p>
                                             )}
                                         </div>
                                         <Button className="w-full" type="submit">
@@ -187,9 +170,7 @@ const Page = () => {
                                                 className="col-span-3 dark:border-gray-400"
                                             />
                                             {errorsSignUp.username && (
-                                                <p className="text-red-500">
-                                                    {errorsSignUp.username.message}
-                                                </p>
+                                                <p className="text-red-500">{errorsSignUp.username.message}</p>
                                             )}
                                         </div>
                                         <div className="space-y-2">
@@ -202,24 +183,20 @@ const Page = () => {
                                                 className="col-span-3 dark:border-gray-400"
                                             />
                                             {errorsSignUp.email && (
-                                                <p className="text-red-500">
-                                                    {errorsSignUp.email.message}
-                                                </p>
+                                                <p className="text-red-500">{errorsSignUp.email.message}</p>
                                             )}
                                         </div>
                                         <div className="space-y-2">
                                             <Label htmlFor="signupPassword">Password</Label>
                                             <Input
-                                                id="signupPassword"
+                                                id="signPassword"
                                                 type="password"
                                                 {...registerSignUp("password")}
                                                 placeholder="Enter your Password"
                                                 className="col-span-3 dark:border-gray-400"
                                             />
                                             {errorsSignUp.password && (
-                                                <p className="text-red-500">
-                                                    {errorsSignUp.password.message}
-                                                </p>
+                                                <p className="text-red-500">{errorsSignUp.password.message}</p>
                                             )}
                                         </div>
                                         <div className="space-y-2">
@@ -231,33 +208,34 @@ const Page = () => {
                                                 className="col-span-3 dark:border-gray-400"
                                             />
                                             {errorsSignUp.dateOfBirth && (
-                                                <p className="text-red-500">
-                                                    {errorsSignUp.dateOfBirth.message}
-                                                </p>
+                                                <p className="text-red-500">{errorsSignUp.dateOfBirth.message}</p>
                                             )}
                                         </div>
                                         <div className="space-y-2">
                                             <Label>Gender</Label>
-                                            <RadioGroup>
+                                            <RadioGroup
+                                                className="flex justify-between"
+                                                value={watch("gender") as "male" | "female" | "other"} // Explicitly type the watched value
+                                                onValueChange={(value: "male" | "female" | "other") => setValue("gender", value)} // Explicitly type the onValueChange parameter
+                                            >
                                                 <div className="flex items-center space-x-2">
-                                                    <RadioGroupItem value="male" id="male" {...registerSignUp("gender")} />
+                                                    <RadioGroupItem value="male" id="male" />
                                                     <Label htmlFor="male">Male</Label>
                                                 </div>
                                                 <div className="flex items-center space-x-2">
-                                                    <RadioGroupItem value="female" id="female" {...registerSignUp("gender")} />
+                                                    <RadioGroupItem value="female" id="female" />
                                                     <Label htmlFor="female">Female</Label>
                                                 </div>
                                                 <div className="flex items-center space-x-2">
-                                                    <RadioGroupItem value="other" id="other" {...registerSignUp("gender")} />
+                                                    <RadioGroupItem value="other" id="other" />
                                                     <Label htmlFor="other">Other</Label>
                                                 </div>
                                             </RadioGroup>
                                             {errorsSignUp.gender && (
-                                                <p className="text-red-500">
-                                                    {errorsSignUp.gender.message}
-                                                </p>
+                                                <p className="text-red-500">{errorsSignUp.gender.message}</p>
                                             )}
                                         </div>
+
                                         <Button className="w-full" type="submit">
                                             <LogIn className="mr-2 w-4 h-4" /> Sign Up
                                         </Button>

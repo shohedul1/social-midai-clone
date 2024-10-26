@@ -64,7 +64,6 @@ const Page: React.FC = () => {
             />
             <ProfileTabs
                 profileData={profileData}
-                setProfileData={setProfileData}
                 isOwner={isOwner}
                 id={id}
                 fetchProfile={fetchProfile}

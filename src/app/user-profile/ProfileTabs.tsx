@@ -1,6 +1,5 @@
-'use client'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ProfileDetails from './ProfileDetails';
 
 // Define types for ProfileData and the props
@@ -28,22 +27,23 @@ interface ProfileTabsProps {
     id: string;
     profileData: ProfileData;
     isOwner: boolean;
-    setProfileData: React.Dispatch<React.SetStateAction<ProfileData | null>>;
     fetchProfile: () => Promise<void>;
 }
+
+// Define the allowed tab values
+type TabValue = "posts" | "about" | "friends" | "photos";
 
 const ProfileTabs: React.FC<ProfileTabsProps> = ({
     id,
     profileData,
     isOwner,
-    setProfileData,
     fetchProfile,
 }) => {
-    const [activeTab, setActiveTab] = useState<string>("posts");
+    const [activeTab, setActiveTab] = useState<TabValue>("posts");
 
     return (
         <div className='max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-8'>
-            <Tabs defaultValue='posts' className='w-full' onValueChange={setActiveTab}>
+            <Tabs defaultValue='posts' className='w-full' onValueChange={(value) => setActiveTab(value as TabValue)}>
                 <TabsList className="grid w-full grid-cols-4">
                     <TabsTrigger value="posts">Posts</TabsTrigger>
                     <TabsTrigger value="about">About</TabsTrigger>
@@ -62,6 +62,6 @@ const ProfileTabs: React.FC<ProfileTabsProps> = ({
             </Tabs>
         </div>
     );
-}
+};
 
 export default ProfileTabs;

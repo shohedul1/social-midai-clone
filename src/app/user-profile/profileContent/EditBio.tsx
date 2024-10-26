@@ -26,12 +26,23 @@ interface EditBioProps {
     fetchProfile: () => Promise<void>;
 }
 
+// Define a type for the form data
+interface FormData {
+    bioText?: string;
+    liveIn?: string;
+    relationship?: string;
+    hometown?: string;
+    workplace?: string;
+    education?: string;
+    phone?: string;
+}
+
 const EditBio: React.FC<EditBioProps> = ({ isOpen, onClose, initialData, id, fetchProfile }) => {
-    const { register, handleSubmit, formState: { isSubmitting } } = useForm({
+    const { register, handleSubmit, formState: { isSubmitting } } = useForm<FormData>({
         defaultValues: initialData,
     });
 
-    const handleEditBio = async (data: any) => {
+    const handleEditBio = async (data: FormData) => {
         try {
             await createOrUpdateUserBio(id, data);
             toast.success('User bio updated successfully');
@@ -107,7 +118,7 @@ const EditBio: React.FC<EditBioProps> = ({ isOpen, onClose, initialData, id, fet
                     </div>
                     <DialogFooter>
                         <Button type="submit" disabled={isSubmitting}>
-                            <Save className="w-4 h-4 mr-2" />  
+                            <Save className="w-4 h-4 mr-2" />
                             {isSubmitting ? "Saving..." : "Save Changes"}
                         </Button>
                     </DialogFooter>

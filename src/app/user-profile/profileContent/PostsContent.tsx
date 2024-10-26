@@ -7,6 +7,8 @@ import { MessageCircle, MoreHorizontal, Share2, ThumbsUp } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from '@/components/ui/dialog';
 import { formatDate } from '@/lib/utils';
+import Image from 'next/image';
+import PostComments from '@/components/posts/PostComments';
 
 
 
@@ -57,7 +59,8 @@ const PostsContent: React.FC<PostsContentProps> = ({
 }) => {
     const [showComments, setShowComments] = useState(false);
     const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
-    const commentInputRef = useRef<HTMLTextAreaElement | null>(null);
+    const commentInputRef = useRef<HTMLInputElement | null>(null); // Update to HTMLInputElement
+
 
     const userPlaceholder = post?.user?.username.split(" ").map((name) => name[0]).join("");
 
@@ -129,7 +132,10 @@ const PostsContent: React.FC<PostsContentProps> = ({
                     </div>
                     <p className='mb-4'>{post?.content}</p>
                     {post?.mediaUrl && post.mediaType === 'image' && (
-                        <img
+                        <Image
+                            width={500}
+                            height={500}
+                            priority
                             src={post?.mediaUrl}
                             alt='post_image'
                             className='w-full h-auto rounded-lg mb-4'
@@ -192,11 +198,13 @@ const PostsContent: React.FC<PostsContentProps> = ({
                                 exit={{ opacity: 0, height: 0 }}
                                 transition={{ duration: 0.3 }}
                             >
-                                {/* <PostComments
-                                    comments={comments}
+
+
+                                <PostComments
+                                    comments={post.comments} // Ensure to pass the comments array
                                     onComment={onComment}
                                     commentInputRef={commentInputRef}
-                                /> */}
+                                />
                             </motion.div>
                         )}
                     </AnimatePresence>
