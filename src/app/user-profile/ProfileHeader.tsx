@@ -1,4 +1,4 @@
-"use client";
+
 
 import React, { useRef, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -18,6 +18,13 @@ import { updateUserCoverPhoto, updateUserProfile } from "@/service/user.service"
 import { useForm } from "react-hook-form";
 import userStore from "../../../store/userStore";
 import Image from "next/image";
+
+// Define the structure of the form data
+interface FormData {
+    username: string;
+    dateOfBirth: string; // ISO 8601 date format
+    gender: "male" | "female" | "other";
+}
 
 interface Bio {
     bioText: string;
@@ -68,7 +75,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
     const [loading, setLoading] = useState(false);
     const { setUser } = userStore();
 
-    const { register, handleSubmit, setValue } = useForm({
+    const { register, handleSubmit, setValue } = useForm<FormData>({
         defaultValues: {
             username: profileData.username,
             dateOfBirth: profileData.dateOfBirth.split("T")[0],
@@ -79,7 +86,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
     const profileImageInputRef = useRef<HTMLInputElement | null>(null);
     const coverImageInputRef = useRef<HTMLInputElement | null>(null);
 
-    const onSubmitProfile = async (data: any) => {
+    const onSubmitProfile = async (data: FormData) => { // Use FormData here
         try {
             setLoading(true);
             const formData = new FormData();
@@ -103,6 +110,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
             setLoading(false);
         }
     };
+
     const onSubmitCoverPhoto = async () => {
         try {
             setLoading(true);
@@ -121,7 +129,6 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         }
     };
 
-
     const handleProfilePictureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
@@ -130,8 +137,6 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
             setProfilePicturePreview(previewUrl);
         }
     };
-
-
 
     const handleCoverPhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -331,9 +336,6 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                                     <Save className="w-4 h-4 mr-2" /> {loading ? "Saving..." : "Save Cover Photo"}
                                 </Button>
                             </form>
-
-
-
                         </motion.div>
                     </motion.div>
                 )}
