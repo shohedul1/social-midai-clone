@@ -150,14 +150,16 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
     return (
         <div className="relative">
             <div className="relative h-64 md:h-80 bg-gray-300 overflow-hidden">
+
                 <Image
                     width={500}
                     height={500}
                     priority
-                    src={profileData.coverPhoto}
+                    src={profileData.coverPhoto || '/default-cover.jpg'} // Use a default image if coverPhoto is missing
                     alt="cover"
                     className="w-full h-full object-cover"
                 />
+
                 {isOwner && (
                     <Button
                         className="absolute bottom-4 right-4 flex items-center"
