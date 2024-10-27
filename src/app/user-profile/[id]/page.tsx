@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import ProfileHeader from "../ProfileHeader";
 import ProfileTabs from "../ProfileTabs";
@@ -68,6 +69,15 @@ const Page: React.FC = () => {
     if (!profileData) {
         return <div>No profile data found.</div>;
     }
+
+    console.log("profileData", profileData);
+    console.log("profileData", setProfileData);
+    console.log("id", id)
+    console.log("fetchProfile", fetchProfile);
+    console.log("isOwner", isOwner)
+
+
+
 
     return (
         <div>
