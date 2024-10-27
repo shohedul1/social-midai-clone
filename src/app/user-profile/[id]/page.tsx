@@ -1,6 +1,7 @@
+
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import ProfileHeader from "../ProfileHeader";
 import ProfileTabs from "../ProfileTabs";
 import { useParams } from "next/navigation";
@@ -43,7 +44,8 @@ const Page: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [isOwner, setIsOwner] = useState<boolean>(false);
 
-    const fetchProfile = async () => {
+    // Use useCallback to memoize the fetchProfile function
+    const fetchProfile = useCallback(async () => {
         setLoading(true);
         try {
             const result: FetchResult = await fetchUserProfile(id);
@@ -54,13 +56,13 @@ const Page: React.FC = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [id]); // Add id as a dependency
 
     useEffect(() => {
         if (id) {
             fetchProfile();
         }
-    }, [id]);
+    }, [id, fetchProfile]); // Include fetchProfile in the dependencies
 
     if (loading) {
         return <div>Loading...</div>;
@@ -69,15 +71,6 @@ const Page: React.FC = () => {
     if (!profileData) {
         return <div>No profile data found.</div>;
     }
-
-    console.log("profileData", profileData);
-    console.log("profileData", setProfileData);
-    console.log("id", id)
-    console.log("fetchProfile", fetchProfile);
-    console.log("isOwner", isOwner)
-
-
-
 
     return (
         <div>

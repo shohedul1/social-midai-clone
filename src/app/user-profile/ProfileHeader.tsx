@@ -145,7 +145,10 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
     return (
         <div className="relative">
             <div className="relative h-64 md:h-80 bg-gray-300 overflow-hidden">
-                <img
+                <Image
+                    width={500}
+                    height={500}
+                    priority
                     src={profileData.coverPhoto}
                     alt="cover"
                     className="w-full h-full object-cover"

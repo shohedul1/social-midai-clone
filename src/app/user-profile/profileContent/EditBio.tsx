@@ -1,3 +1,4 @@
+
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
@@ -25,7 +26,6 @@ interface EditBioProps {
     fetchProfile: () => Promise<void>;
 }
 
-// Define the structure of the form data
 interface FormData {
     bioText: string;
     liveIn: string;
@@ -43,12 +43,13 @@ const EditBio: React.FC<EditBioProps> = ({ isOpen, onClose, initialData, id, fet
 
     const handleEditBio = async (data: FormData) => {
         try {
-            await createOrUpdateUserBio(id, data)
-            toast.success('User bio updated successfully')
-            await fetchProfile()
+            await createOrUpdateUserBio(id, data);
+            toast.success('User bio updated successfully');
+            await fetchProfile();
+            reset(); // Reset the form fields
             onClose();
         } catch (error) {
-            console.log('Error creating or updating user bio', error)
+            console.log('Error creating or updating user bio', error);
             toast.error('Failed to update bio, please try again.');
         }
     }
@@ -67,7 +68,6 @@ const EditBio: React.FC<EditBioProps> = ({ isOpen, onClose, initialData, id, fet
                                 {...register("bioText")}
                             />
                         </div>
-
                         <div className='grid grid-cols-4 items-center gap-4'>
                             <Label htmlFor="liveIn" className="text-right">Live In</Label>
                             <Input
@@ -84,7 +84,6 @@ const EditBio: React.FC<EditBioProps> = ({ isOpen, onClose, initialData, id, fet
                                 className="col-span-3"
                             />
                         </div>
-
                         <div className='grid grid-cols-4 items-center gap-4'>
                             <Label htmlFor="workPlace" className="text-right">Work Place</Label>
                             <Input
@@ -93,7 +92,6 @@ const EditBio: React.FC<EditBioProps> = ({ isOpen, onClose, initialData, id, fet
                                 className="col-span-3"
                             />
                         </div>
-
                         <div className='grid grid-cols-4 items-center gap-4'>
                             <Label htmlFor="education" className="text-right">Education</Label>
                             <Input
@@ -102,7 +100,6 @@ const EditBio: React.FC<EditBioProps> = ({ isOpen, onClose, initialData, id, fet
                                 className="col-span-3"
                             />
                         </div>
-
                         <div className='grid grid-cols-4 items-center gap-4'>
                             <Label htmlFor="phone" className="text-right">Phone</Label>
                             <Input
@@ -111,7 +108,6 @@ const EditBio: React.FC<EditBioProps> = ({ isOpen, onClose, initialData, id, fet
                                 className="col-span-3"
                             />
                         </div>
-
                         <div className='grid grid-cols-4 items-center gap-4'>
                             <Label htmlFor="hometown" className="text-right">Hometown</Label>
                             <Input
@@ -133,3 +129,4 @@ const EditBio: React.FC<EditBioProps> = ({ isOpen, onClose, initialData, id, fet
 }
 
 export default EditBio;
+
