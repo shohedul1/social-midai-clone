@@ -102,25 +102,29 @@ export const updateUserCoverPhoto = async (userId: string, updateData: FormData)
     }
 };
 
-// Create or update user bio
+
+// Define the FormData interface here if it's not already imported
 interface BioData {
-    bioText?: string;
-    liveIn?: string;
-    relationship?: string;
-    hometown?: string;
-    workplace?: string;
-    education?: string;
-    phone?: string;
+    bioText: string;
+    liveIn: string;
+    relationship: string;
+    workplace: string;
+    education: string;
+    phone: string;
+    hometown: string;
 }
-export const createOrUpdateUserBio = async (userId: string, bioData:BioData ) => {
+
+// Update your service function
+export const createOrUpdateUserBio = async (userId: string, bioData: BioData) => {
     try {
-        const response = await axiosInstance.put(`/users/bio/${userId}`, { bio: bioData });
+        const response = await axiosInstance.put(`/users/bio/${userId}`, bioData)
         return response?.data?.data;
     } catch (error) {
-        console.error("Error updating user bio:", error);
+        console.log(error);
         throw error;
     }
-};
+}
+
 
 // Get all users
 export const getAllUsers = async () => {

@@ -1,10 +1,10 @@
 "use client";
+
+import React, { useRef, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Camera, PenLine, Save, Upload, X } from "lucide-react";
-import React, { useRef, useState } from "react";
-import { motion } from "framer-motion";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import {
@@ -14,38 +14,41 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { updateUserCoverPhoto, updateUserProfile, } from "@/service/user.service";
+import { updateUserCoverPhoto, updateUserProfile } from "@/service/user.service";
 import { useForm } from "react-hook-form";
 import userStore from "../../../store/userStore";
 import Image from "next/image";
 
-// Define types for the profile data and props
-interface ProfileData {
-    username: string;
-    dateOfBirth?: string | Date;
-    gender?: string;
-    coverPhoto?: string;
-    profilePicture?: string;
-    followerCount?: number;
-    email: string; // Ensure email is included
-    bio?: {
-        bioText?: string;
-        liveIn?: string;
-        relationship?: string;
-        hometown?: string;
-        workplace?: string;
-        education?: string;
-        phone?: string;
-    };
-    followingCount?: number;
+interface Bio {
+    bioText: string;
+    education: string;
+    hometown: string;
+    liveIn: string;
+    phone: string;
+    relationship: string;
+    workplace: string;
 }
 
+interface ProfileData {
+    _id: string;
+    username: string;
+    email: string;
+    dateOfBirth: string; // ISO 8601 date format
+    gender: "male" | "female" | "other"; // Assuming these are the only options
+    profilePicture: string; // URL to the profile picture
+    coverPhoto: string; // URL to the cover photo
+    followerCount: number;
+    followingCount: number;
+    followers: string[]; // Array of follower IDs
+    following: string[]; // Array of following IDs
+    bio: Bio; // Nested bio object
+}
 
 interface ProfileHeaderProps {
     id: string;
     profileData: ProfileData;
     isOwner: boolean;
-    setProfileData: (data: ProfileData | null) => void; // Ensure null is allowed
+    setProfileData: React.Dispatch<React.SetStateAction<ProfileData | null>>;
     fetchProfile: () => Promise<void>;
 }
 
@@ -65,52 +68,54 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
     const [loading, setLoading] = useState(false);
     const { setUser } = userStore();
 
-
-    const { register, handleSubmit, setValue } = useForm<ProfileData>({
+    const { register, handleSubmit, setValue } = useForm({
         defaultValues: {
-            username: profileData?.username,
-            dateOfBirth: typeof profileData?.dateOfBirth === 'string'
-                ? profileData.dateOfBirth.split("T")[0]
-                : undefined, // Set to undefined if not a string
-            gender: profileData?.gender,
+            username: profileData.username,
+            dateOfBirth: profileData.dateOfBirth.split("T")[0],
+            gender: profileData.gender,
         },
     });
 
+    const profileImageInputRef = useRef<HTMLInputElement | null>(null);
+    const coverImageInputRef = useRef<HTMLInputElement | null>(null);
 
-    const profileImageInputRef = useRef<HTMLInputElement>(null);
-    const coverImageInputRef = useRef<HTMLInputElement>(null);
-
-    const onSubmitProfile = async (data: ProfileData) => {
+    const onSubmitProfile = async (data: any) => {
         try {
             setLoading(true);
             const formData = new FormData();
-
             formData.append("username", data.username);
-
-            // Handle dateOfBirth conversion
-            if (data.dateOfBirth) {
-                const dateOfBirthString = typeof data.dateOfBirth === 'string'
-                    ? data.dateOfBirth
-                    : data.dateOfBirth instanceof Date
-                        ? data.dateOfBirth.toISOString() // Convert Date to string
-                        : ""; // or handle as you see fit
-                formData.append("dateOfBirth", dateOfBirthString);
-            }
-
-            formData.append("gender", data.gender || "");
+            formData.append("dateOfBirth", data.dateOfBirth);
+            formData.append("gender", data.gender);
 
             if (profilePictureFile) {
                 formData.append("profilePicture", profilePictureFile);
             }
 
             const updateProfile = await updateUserProfile(id, formData);
-            setProfileData({ ...profileData, ...updateProfile });
+            setProfileData((prev) => (prev ? { ...prev, ...updateProfile } : null));
             setIsEditProfileModel(false);
             setProfilePicturePreview(null);
             setUser(updateProfile);
             await fetchProfile();
         } catch (error) {
             console.error("error updating user profile", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+    const onSubmitCoverPhoto = async () => {
+        try {
+            setLoading(true);
+            const formData = new FormData();
+            if (coverPhotoFile) {
+                formData.append("coverPhoto", coverPhotoFile);
+            }
+            const updateProfile = await updateUserCoverPhoto(id, formData);
+            setProfileData((prev) => (prev ? { ...prev, coverPhoto: updateProfile.coverPhoto } : null));
+            setIsEditCoverModel(false);
+            setCoverPhotoFile(null);
+        } catch (error) {
+            console.error("error updating user cover photo", error);
         } finally {
             setLoading(false);
         }
@@ -126,24 +131,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         }
     };
 
-    const onSubmitCoverPhoto = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        try {
-            setLoading(true);
-            const formData = new FormData();
-            if (coverPhotoFile) {
-                formData.append("coverPhoto", coverPhotoFile);
-            }
-            const updateProfile = await updateUserCoverPhoto(id, formData);
-            setProfileData({ ...profileData, coverPhoto: updateProfile.coverPhoto });
-            setIsEditCoverModel(false);
-            setCoverPhotoFile(null);
-        } catch (error) {
-            console.error("error updating user cover photo", error);
-        } finally {
-            setLoading(false);
-        }
-    };
+
 
     const handleCoverPhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -156,12 +144,9 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
 
     return (
         <div className="relative">
-            <div className="relative h-64 md:h-80 bg-gray-300 overflow-hidden ">
-                <Image
-                    width={500}
-                    height={500}
-                    priority
-                    src={profileData?.coverPhoto || ""}
+            <div className="relative h-64 md:h-80 bg-gray-300 overflow-hidden">
+                <img
+                    src={profileData.coverPhoto}
                     alt="cover"
                     className="w-full h-full object-cover"
                 />
@@ -172,30 +157,30 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                         size="sm"
                         onClick={() => setIsEditCoverModel(true)}
                     >
-                        <Camera className=" mr-0 md:mr-2 h-4 w-4" />
+                        <Camera className="mr-0 md:mr-2 h-4 w-4" />
                         <span className="hidden md:block">Edit Cover Photo</span>
                     </Button>
                 )}
             </div>
-            {/* profile section */}
+
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 relative z-10">
-                <div className="flex flex-col md:flex-row items-center md:items-end md:space-x-5 ">
+                <div className="flex flex-col md:flex-row items-center md:items-end md:space-x-5">
                     <Avatar className="w-32 h-32 border-4 border-white dark:border-gray-700">
                         <AvatarImage
-                            src={profileData?.profilePicture || ""}
+                            src={profileData.profilePicture}
                             alt={profileData.username}
                         />
                         <AvatarFallback className="dark:bg-gray-400">
-                            {profileData?.username
-                                ?.split(" ")
+                            {profileData.username
+                                .split(" ")
                                 .map((name) => name[0])
                                 .join("")}
                         </AvatarFallback>
                     </Avatar>
                     <div className="mt-4 md:mt-0 text-center md:text-left flex-grow">
-                        <h1 className="text-3xl font-bold">{profileData?.username}</h1>
+                        <h1 className="text-3xl font-bold">{profileData.username}</h1>
                         <p className="text-gray-400 font-semibold">
-                            {profileData?.followerCount} friends
+                            {profileData.followerCount} friends
                         </p>
                     </div>
                     {isOwner && (
@@ -210,7 +195,6 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                 </div>
             </div>
 
-            {/* edit profile modal */}
             <AnimatePresence>
                 {isEditProfileModel && (
                     <motion.div
@@ -223,7 +207,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                             initial={{ scale: 0.9, y: 20 }}
                             animate={{ scale: 1, y: 0 }}
                             exit={{ scale: 0.9, y: 20 }}
-                            className=" bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md"
+                            className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md"
                         >
                             <div className="flex justify-between items-center mb-4">
                                 <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
@@ -241,12 +225,12 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                                 <div className="flex flex-col items-center mb-4">
                                     <Avatar className="w-24 h-24 border-4 border-white dark:border-gray-700 mb-2">
                                         <AvatarImage
-                                            src={profilePicturePreview || profileData?.profilePicture || ""}
-                                            alt={profileData?.username}
+                                            src={profilePicturePreview || profileData.profilePicture}
+                                            alt={profileData.username}
                                         />
                                         <AvatarFallback className="dark:bg-gray-400">
-                                            {profileData?.username
-                                                ?.split(" ")
+                                            {profileData.username
+                                                .split(" ")
                                                 .map((name) => name[0])
                                                 .join("")}
                                         </AvatarFallback>
@@ -267,7 +251,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                                 </div>
                                 <div>
                                     <Label htmlFor="gender">Gender</Label>
-                                    <Select onValueChange={(value) => setValue("gender", value)} defaultValue={profileData?.gender}>
+                                    <Select onValueChange={(value) => setValue("gender", value as "male" | "female" | "other")} defaultValue={profileData.gender}>
                                         <SelectTrigger>
                                             <SelectValue placeholder="Select gender" />
                                         </SelectTrigger>
@@ -290,7 +274,6 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                 )}
             </AnimatePresence>
 
-            {/* edit cover modal */}
             <AnimatePresence>
                 {isEditCoverModel && (
                     <motion.div
@@ -303,7 +286,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                             initial={{ scale: 0.9, y: 20 }}
                             animate={{ scale: 1, y: 0 }}
                             exit={{ scale: 0.9, y: 20 }}
-                            className=" bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md"
+                            className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md"
                         >
                             <div className="flex justify-between items-center mb-4">
                                 <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
@@ -317,7 +300,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                                     <X className="w-4 h-4" />
                                 </Button>
                             </div>
-                            <form className="space-y-4" onSubmit={onSubmitCoverPhoto}>
+                            <form className="space-y-4">
                                 <div className="flex flex-col items-center mb-4">
                                     {coverPhotoPreview && (
                                         <Image
@@ -335,14 +318,19 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                                         Select New Cover Photo
                                     </Button>
                                 </div>
+
                                 <Button
                                     className="w-full bg-blue-600 hover:bg-blue-400 text-white"
+                                    onClick={onSubmitCoverPhoto}
                                     disabled={!coverPhotoFile}
-                                    type="submit"
+                                    type="button"
                                 >
                                     <Save className="w-4 h-4 mr-2" /> {loading ? "Saving..." : "Save Cover Photo"}
                                 </Button>
                             </form>
+
+
+
                         </motion.div>
                     </motion.div>
                 )}

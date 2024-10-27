@@ -1,57 +1,57 @@
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { createOrUpdateUserBio } from '@/service/user.service';
-import { Save } from 'lucide-react';
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { createOrUpdateUserBio } from '@/service/user.service'
+import { Save } from 'lucide-react'
+import React from 'react'
+import { useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
 
-// Define types for the props
 interface EditBioProps {
     isOpen: boolean;
     onClose: () => void;
-    initialData?: {
-        bioText?: string;
-        liveIn?: string;
-        relationship?: string;
-        hometown?: string;
-        workplace?: string;
-        education?: string;
-        phone?: string;
+    initialData: {
+        bioText: string;
+        liveIn: string;
+        relationship: string;
+        workplace: string;
+        education: string;
+        phone: string;
+        hometown: string;
     };
     id: string;
     fetchProfile: () => Promise<void>;
 }
 
-// Define a type for the form data
+// Define the structure of the form data
 interface FormData {
-    bioText?: string;
-    liveIn?: string;
-    relationship?: string;
-    hometown?: string;
-    workplace?: string;
-    education?: string;
-    phone?: string;
+    bioText: string;
+    liveIn: string;
+    relationship: string;
+    workplace: string;
+    education: string;
+    phone: string;
+    hometown: string;
 }
 
 const EditBio: React.FC<EditBioProps> = ({ isOpen, onClose, initialData, id, fetchProfile }) => {
-    const { register, handleSubmit, formState: { isSubmitting } } = useForm<FormData>({
+    const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<FormData>({
         defaultValues: initialData,
-    });
+    })
 
     const handleEditBio = async (data: FormData) => {
         try {
-            await createOrUpdateUserBio(id, data);
-            toast.success('User bio updated successfully');
-            await fetchProfile();
+            await createOrUpdateUserBio(id, data)
+            toast.success('User bio updated successfully')
+            await fetchProfile()
             onClose();
         } catch (error) {
-            console.log('Error creating or updating user bio', error);
+            console.log('Error creating or updating user bio', error)
+            toast.error('Failed to update bio, please try again.');
         }
-    };
+    }
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
@@ -67,6 +67,7 @@ const EditBio: React.FC<EditBioProps> = ({ isOpen, onClose, initialData, id, fet
                                 {...register("bioText")}
                             />
                         </div>
+
                         <div className='grid grid-cols-4 items-center gap-4'>
                             <Label htmlFor="liveIn" className="text-right">Live In</Label>
                             <Input
@@ -83,14 +84,16 @@ const EditBio: React.FC<EditBioProps> = ({ isOpen, onClose, initialData, id, fet
                                 className="col-span-3"
                             />
                         </div>
+
                         <div className='grid grid-cols-4 items-center gap-4'>
-                            <Label htmlFor="workplace" className="text-right">Work Place</Label>
+                            <Label htmlFor="workPlace" className="text-right">Work Place</Label>
                             <Input
                                 id='workplace'
                                 {...register("workplace")}
                                 className="col-span-3"
                             />
                         </div>
+
                         <div className='grid grid-cols-4 items-center gap-4'>
                             <Label htmlFor="education" className="text-right">Education</Label>
                             <Input
@@ -99,6 +102,7 @@ const EditBio: React.FC<EditBioProps> = ({ isOpen, onClose, initialData, id, fet
                                 className="col-span-3"
                             />
                         </div>
+
                         <div className='grid grid-cols-4 items-center gap-4'>
                             <Label htmlFor="phone" className="text-right">Phone</Label>
                             <Input
@@ -107,6 +111,7 @@ const EditBio: React.FC<EditBioProps> = ({ isOpen, onClose, initialData, id, fet
                                 className="col-span-3"
                             />
                         </div>
+
                         <div className='grid grid-cols-4 items-center gap-4'>
                             <Label htmlFor="hometown" className="text-right">Hometown</Label>
                             <Input
@@ -118,14 +123,13 @@ const EditBio: React.FC<EditBioProps> = ({ isOpen, onClose, initialData, id, fet
                     </div>
                     <DialogFooter>
                         <Button type="submit" disabled={isSubmitting}>
-                            <Save className="w-4 h-4 mr-2" />
-                            {isSubmitting ? "Saving..." : "Save Changes"}
+                            <Save className="w-4 h-4 mr-2" /> {isSubmitting ? "Saving..." : "Save changes"}
                         </Button>
                     </DialogFooter>
                 </form>
             </DialogContent>
         </Dialog>
-    );
-};
+    )
+}
 
 export default EditBio;

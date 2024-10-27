@@ -1,6 +1,6 @@
 
-
 import React, { useEffect, useState } from "react";
+import PostsContent from "./profileContent/PostsContent";
 import { Card, CardContent } from "@/components/ui/card";
 import {
     Briefcase,
@@ -15,33 +15,41 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { usePostStore } from "../../../store/usePostStore";
-import toast from "react-hot-toast";
-import { formatDateInDDMMYYYY } from "@/lib/utils";
-import PostsContent from "./profileContent/PostsContent";
 import MutualFriends from "./profileContent/MutualFriends";
 import EditBio from "./profileContent/EditBio";
-import Image from "next/image";
+import toast from "react-hot-toast";
+import { usePostStore } from "../../../store/usePostStore";
+import { formatDateInDDMMYYYY } from "@/lib/utils";
 
-// Define types for the props
-interface ProfileDetailsProps {
-    activeTab: "posts" | "about" | "friends" | "photos"; // Specify allowed tab keys
-    id: string;
-    profileData: {
-        username: string;
-        bio?: {
-            bioText?: string;
-            liveIn?: string;
-            relationship?: string;
-            hometown?: string;
-            workplace?: string;
-            education?: string;
-            phone?: string;
-        };
-        email: string;
-        dateOfBirth?: string | Date;
-        followingCount?: number;
+interface ProfileData {
+    _id: string;
+    username: string;
+    email: string;
+    dateOfBirth: string;
+    gender: "male" | "female" | "other";
+    profilePicture: string;
+    coverPhoto: string;
+    followerCount: number;
+    followingCount: number;
+    followers: string[];
+    following: string[];
+    bio: {
+        bioText: string;
+        education: string;
+        hometown: string;
+        liveIn: string;
+        phone: string;
+        relationship: string;
+        workplace: string;
     };
+}
+
+type TabKey = "posts" | "about" | "friends" | "photos";
+
+interface ProfileDetailsProps {
+    activeTab: TabKey;
+    id: string;
+    profileData: ProfileData;
     isOwner: boolean;
     fetchProfile: () => Promise<void>;
 }
@@ -54,7 +62,7 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({
     fetchProfile,
 }) => {
     const [isEditBioModel, setIsEditBioModel] = useState(false);
-    const [likePosts, setLikePosts] = useState<Set<string>>(new Set());
+    const [likePosts, setLikePosts] = useState(new Set<string>());
     const {
         userPosts,
         fetchUserPost,
@@ -68,7 +76,6 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({
             fetchUserPost(id);
         }
     }, [id, fetchUserPost]);
-
 
     useEffect(() => {
         const saveLikes = localStorage.getItem("likePosts");
@@ -98,9 +105,9 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({
         }
     };
 
-    const tabContent = {
+    const tabContent: Record<TabKey, React.JSX.Element> = {
         posts: (
-            <div className="flex flex-col lg:flex-row gap-6 ">
+            <div className="flex flex-col lg:flex-row gap-6">
                 <div className="w-full lg:w-[70%] space-y-6 mb-4">
                     {userPosts?.map((post) => (
                         <PostsContent
@@ -122,9 +129,7 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({
                 <div className="w-full lg:w-[30%]">
                     <Card>
                         <CardContent className="p-6">
-                            <h2 className="text-xl font-semibold mb-4 dark:text-gray-300">
-                                Intro
-                            </h2>
+                            <h2 className="text-xl font-semibold mb-4 dark:text-gray-300">Intro</h2>
                             <p className="text-gray-600 dark:text-gray-300 mb-4">
                                 {profileData?.bio?.bioText}
                             </p>
@@ -207,9 +212,7 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({
                             </div>
                             <div className="flex items-center">
                                 <Cake className="w-5 h-5 mr-2" />
-                                <span>
-                                    Birthday: {profileData?.dateOfBirth ? formatDateInDDMMYYYY(profileData.dateOfBirth) : "Not provided"}
-                                </span>
+                                <span>Birthday: {formatDateInDDMMYYYY(profileData?.dateOfBirth)}</span>
                             </div>
                         </div>
                     </CardContent>
@@ -226,23 +229,9 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({
             >
                 <Card>
                     <CardContent className="p-6">
-                        <h2 className="text-xl font-semibold mb-4 dark:text-gray-300">
-                            Photos
-                        </h2>
+                        <h2 className="text-xl font-semibold mb-4 dark:text-gray-300">Photos</h2>
                         <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                            {userPosts
-                                ?.filter(post => post?.mediaType === "image" && post?.mediaUrl)
-                                .map(post => (
-                                    <Image
-                                        width={500}
-                                        height={500}
-                                        property=""
-                                        key={post?._id}
-                                        src={post?.mediaUrl}
-                                        alt="user_all_photos"
-                                        className="w-[200px] h-[150px] object-cover rounded-lg"
-                                    />
-                                ))}
+                            {/* Render photos here */}
                         </div>
                     </CardContent>
                 </Card>
@@ -252,14 +241,17 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({
 
     return (
         <div>
-            {tabContent[activeTab] || null}
-            <EditBio
-                isOpen={isEditBioModel}
-                onClose={() => setIsEditBioModel(false)}
-                fetchProfile={fetchProfile}
-                initialData={profileData?.bio}
-                id={id}
-            ></EditBio>
+            {tabContent[activeTab]}
+            {/* Your edit bio modal logic can go here */}
+            {isEditBioModel && (
+                <EditBio
+                    isOpen={isEditBioModel}
+                    onClose={() => setIsEditBioModel(false)}
+                    fetchProfile={fetchProfile}
+                    initialData={profileData?.bio}
+                    id={id}
+                />
+            )}
         </div>
     );
 };

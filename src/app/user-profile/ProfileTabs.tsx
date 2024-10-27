@@ -1,37 +1,36 @@
-import React, { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import React, { useState } from 'react';
 import ProfileDetails from './ProfileDetails';
-
-// Define types for ProfileData and the props
-interface ProfileData {
-    username: string;
-    dateOfBirth?: string | Date;
-    gender?: string;
-    coverPhoto?: string;
-    profilePicture?: string;
-    followerCount?: number;
-    email: string; // Ensure email is included
-    bio?: {
-        bioText?: string;
-        liveIn?: string;
-        relationship?: string;
-        hometown?: string;
-        workplace?: string;
-        education?: string;
-        phone?: string;
-    };
-    followingCount?: number;// Assuming following count is part of profile data
-}
 
 interface ProfileTabsProps {
     id: string;
-    profileData: ProfileData;
+    profileData: {
+        _id: string;
+        username: string;
+        email: string;
+        dateOfBirth: string; // ISO 8601 date format
+        gender: "male" | "female" | "other"; // Assuming these are the only options
+        profilePicture: string; // URL to the profile picture
+        coverPhoto: string; // URL to the cover photo
+        followerCount: number;
+        followingCount: number;
+        followers: string[]; // Array of follower IDs
+        following: string[]; // Array of following IDs
+        bio: {
+            bioText: string;
+            education: string;
+            hometown: string;
+            liveIn: string;
+            phone: string;
+            relationship: string;
+            workplace: string;
+        };
+    };
     isOwner: boolean;
     fetchProfile: () => Promise<void>;
 }
 
-// Define the allowed tab values
-type TabValue = "posts" | "about" | "friends" | "photos";
+type TabKey = "posts" | "about" | "friends" | "photos";
 
 const ProfileTabs: React.FC<ProfileTabsProps> = ({
     id,
@@ -39,11 +38,16 @@ const ProfileTabs: React.FC<ProfileTabsProps> = ({
     isOwner,
     fetchProfile,
 }) => {
-    const [activeTab, setActiveTab] = useState<TabValue>("posts");
+    const [activeTab, setActiveTab] = useState<TabKey>("posts");
+
+    const handleTabChange = (value: string) => {
+        // Type assertion to ensure value is a TabKey
+        setActiveTab(value as TabKey);
+    };
 
     return (
         <div className='max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-8'>
-            <Tabs defaultValue='posts' className='w-full' onValueChange={(value) => setActiveTab(value as TabValue)}>
+            <Tabs defaultValue='posts' className='w-full' onValueChange={handleTabChange}>
                 <TabsList className="grid w-full grid-cols-4">
                     <TabsTrigger value="posts">Posts</TabsTrigger>
                     <TabsTrigger value="about">About</TabsTrigger>
@@ -62,6 +66,6 @@ const ProfileTabs: React.FC<ProfileTabsProps> = ({
             </Tabs>
         </div>
     );
-};
+}
 
 export default ProfileTabs;
